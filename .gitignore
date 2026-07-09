@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+release/
+out/
+
+# Environment
+.env
+.env.*
+
+# Firebase
+backend/firebase/serviceAccount.json
+firebase/serviceAccount.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# VS Code
+.vscode/
+
+# OS
+Thumbs.db
+.DS_Store

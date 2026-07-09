@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InshuVerse AI • How to use</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg:#0b1220; --panel:#0f172a; --text:#e5e7eb; --muted:#94a3b8;
+      --primary:#6366f1; --primary-600:#5458e8; --primary-400:#7c82f8;
+      --accent:#6366f1; --accent-1:#8b5cf6; --accent-2:#22d3ee;
+      --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
+    }
+    body {
+      margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text);
+      background:
+        radial-gradient(1200px 700px at -20% -10%, rgba(99,102,241,0.12), transparent 60%),
+        radial-gradient(900px 600px at 120% 10%, rgba(34,211,238,0.10), transparent 55%),
+        linear-gradient(180deg,#0b1220,#0a0f1d);
+    }
+    .wrap { max-width: 900px; margin: 32px auto; padding: 0 16px; }
+    header { display:flex; align-items:center; gap:12px; margin-bottom: 16px; }
+    header .logo { font-weight:700; font-size: 22px; }
+    .tagline { color: var(--muted); margin-bottom: 20px; }
+    .card { background: rgba(15,23,42,0.8); border:1px solid rgba(148,163,184,0.12); border-radius:12px; padding:16px 18px; margin: 12px 0; box-shadow: 0 10px 30px rgba(31,41,55,0.15); }
+    h2 { font-size:18px; margin:0 0 8px 0; }
+    h3 { font-size:16px; margin:0 0 8px 0; color: #cbd5e1; }
+    p { margin: 6px 0; color: var(--text); }
+    .muted { color: var(--muted); }
+    ul { margin: 8px 0 8px 18px; }
+    li { margin: 4px 0; }
+    .kbd { display:inline-block; padding:1px 6px; border:1px solid rgba(148,163,184,0.25); border-bottom-width:2px; border-radius:6px; background:rgba(2,6,23,0.6); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    .danger { color: var(--danger); }
+    .footer { text-align:center; color:var(--muted); font-size:12px; margin-top: 24px; }
+    a { color: var(--primary); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <i class="fas fa-robot fa-fw" style="opacity:.7"></i>
+      <div class="logo">InshuVerse AI • Help Guide</div>
+    </header>
+    <div class="tagline">Just press <span class="kbd">Spacebar</span>. Speak. Get help. That’s it.</div>
+
+    <div class="card">
+      <h2>Quick Start</h2>
+      <ul>
+        <li><b>Sign in</b> with Google.</li>
+        <li><b>Allow Microphone</b> (and <b>Screen Recording</b> on Mac for screenshots/app audio).</li>
+        <li>Click <b>Provide Profile</b> to teach InshuVerse AI about your needs.</li>
+        <li>Press <span class="kbd">Spacebar</span> to talk, or type in the chat box.</li>
+      </ul>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3><i class="fas fa-user-tie"></i> Interview Help</h3>
+        <p>Paste your <b>About You</b> and optional <b>Job Description</b>. InshuVerse AI crafts confident answers, structures talking points, and helps with English.</p>
+        <ul>
+          <li>Use <b>Profile</b> tab for your summary.</li>
+          <li>Use <b>Job</b> tab to tailor answers.</li>
+          <li>Ask: “Give me 3 bullet points for ‘Tell me about yourself’.”</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-users"></i> Meetings</h3>
+        <p>Describe your meeting context. Get live guidance, suggested phrasing, and quick summaries.</p>
+        <ul>
+          <li>Fill <b>Meeting Context</b> and select <b>Meeting Type</b>.</li>
+          <li>Ask in real time: “How to disagree politely about scope?”</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-handshake"></i> Sales Calls</h3>
+        <p>Paste your pitch, company details, goals, and audience. InshuVerse AI coaches discovery questions and objection handling.</p>
+        <ul>
+          <li>Tab between <b>Pitch</b> and <b>Company</b>.</li>
+          <li>Ask: “How to handle ‘too expensive’?”</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><i class="fas fa-robot"></i> ChatGPT Mode</h3>
+        <p>Set a custom prompt and assistant role. InshuVerse AI replies in your chosen style.</p>
+        <ul>
+          <li>Write your <b>Custom Prompt</b> and pick <b>Assistant Role</b>.</li>
+          <li>Example: “Act as a concise technical coach.”</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Voice, Chat, and Screenshots</h2>
+      <ul>
+        <li><b>Voice:</b> Press <span class="kbd">Spacebar</span> or click the mic to start/stop listening.</li>
+        <li><b>Chat:</b> Type in the box and press Enter.</li>
+        <li><b>Screenshot:</b> Click the camera to capture your screen for instant analysis (enable Screen Recording on Mac).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Keyboard Shortcuts</h2>
+      <ul>
+        <li><span class="kbd">Spacebar</span> — Start/Stop listening. In Settings you can switch to “Hold to record”.</li>
+        <li><span class="kbd">Cmd/Ctrl + J</span> — Switch to Chat mode and focus the input.</li>
+        <li><span class="kbd">Cmd/Ctrl + R</span> — Reset the conversation.</li>
+        <li><span class="kbd">Cmd/Ctrl + H</span> — Capture and analyze a screenshot.</li>
+        <li><span class="kbd">Cmd/Ctrl + B</span> — Hide/Show the InshuVerse AI window (works globally).</li>
+      </ul>
+      <p class="muted">Tip: Spacebar is the fastest way to talk. Use the other shortcuts to keep flow during calls or interviews.</p>
+    </div>
+
+    <div class="card">
+      <h2>Permissions</h2>
+      <ul>
+        <li><b>Microphone</b> is needed for voice input.</li>
+        <li><b>Screen Recording</b> (Mac) is needed for screenshots and some app audio.</li>
+        <li>You can <b>Skip</b> and still use text chat; re-enable later in system settings.</li>
+      </ul>
+      <p class="muted">Mac: System Settings → Privacy & Security → Screen Recording/Microphone → enable for InshuVerse AI, then restart the app.</p>
+    </div>
+
+    <div class="card">
+      <h2>Tips</h2>
+      <ul>
+        <li>Use short, clear questions. InshuVerse AI remembers your profile to tailor help.</li>
+        <li>For interviews, practice aloud. Ask InshuVerse AI to critique and improve your answer.</li>
+        <li>For meetings/sales, keep the app handy and ask for phrasing live.</li>
+        <li>Long text is auto-summarized for speed. Your originals aren’t lost.</li>
+      </ul>
+    </div>
+
+    <!-- How Spacebar listening and answers work -->
+    <div class="card">
+      <h2>Spacebar: Listening and Answer Flow</h2>
+      <ul>
+        <li>Press <span class="kbd">Spacebar</span> to START listening. InshuVerse AI listens to your selected input (mic or loopback device) and the UI shows that it’s recording.</li>
+        <li>Speak clearly or let the selected input capture the conversation/audio.</li>
+        <li>Press <span class="kbd">Spacebar</span> again to STOP. InshuVerse AI immediately processes what it heard and prepares the best answer.</li>
+        <li>You’ll see a concise, precise response with steps or phrasing you can use right away.</li>
+      </ul>
+    </div>
+
+    <!-- Choosing and testing audio input -->
+    <div class="card">
+      <h2>Audio Input: Choose and Test</h2>
+      <p>Pick the device you want InshuVerse AI to listen to: your microphone for speaking, or a virtual/loopback device for better Results.</p>
+      <ul>
+        <li><b>macOS:</b> In most cases, selecting <b>Default</b> works best. For capturing system audio, use a loopback device like <b>BlackHole</b> or <b>Loopback</b>, then set that as your input in macOS and in InshuVerse AI.</li>
+        <li><b>Windows:</b> For system audio, enable and select <b>Stereo Mix</b> (if available) in Sound settings. If Stereo Mix isn’t present, use a virtual cable (e.g., <b>VB-Audio Cable</b>) and select that in InshuVerse AI.</li>
+        <li>In InshuVerse AI Settings → <b>Audio Input</b>, pick the matching device and click <b>Test</b> to verify levels.</li>
+        <li>Speak at normal volume or play a sample. Watch the <b>audio meter</b> for steady movement without redlining.</li>
+        <li>If levels are too low, increase input gain; if too high/distorted, reduce it.</li>
+      </ul>
+      <p class="muted">Tip: Try a short 3–5 second capture with Spacebar to confirm you get a good, timely answer before important meetings or interviews.</p>
+    </div>
+
+    <div class="card">
+      <h2>Aptitude Mode</h2>
+      <p>A mode optimized for online coding/aptitude platforms and proctored tests (e.g., Salesforce PD1/PD2). It streamlines the UI and focuses on quick, crisp answers.</p>
+      <ul>
+        <li><b>What changes:</b> The mic becomes secondary; screenshot/camera actions are emphasized for fast problem capture.</li>
+        <li><b>When to use:</b> During coding challenges, multiple-choice tests, or timed quizzes where you need rapid guidance.</li>
+        <li><b>How to enable:</b> Open <b>Settings</b> → toggle <b>Aptitude Mode</b>. InshuVerse AI remembers your choice.</li>
+        <li><b>Best practice:</b> Use short, specific prompts or screenshots of the question. Ask for a final answer plus a 2–4 line explanation.</li>
+        <li><b>Limits:</b> Always follow your exam rules. Use InshuVerse AI for learning and preparation in allowed contexts.</li>
+      </ul>
+      <p class="muted">Tip: Combine with <b>Screenshot</b> for the fastest extraction of the question and a succinct solution outline.</p>
+    </div>
+
+    <!-- Use cases and example prompts -->
+    <div class="card">
+      <h2>Use Cases and Example Prompts</h2>
+      <ul>
+        <li><b>Interviews:</b> “Give me a 60–90 sec answer for ‘Tell me about yourself’ based on my profile.”</li>
+        <li><b>Behavioral:</b> “Turn this story into STAR format with 3 crisp bullets.”</li>
+        <li><b>Technical:</b> “Summarize the problem they asked and outline an approach in 4 bullets.”</li>
+        <li><b>Meetings:</b> “Suggest a polite way to push back on unrealistic timeline.”</li>
+        <li><b>Sales calls:</b> “I got a price objection. Give me two ways to respond and one discovery question.”</li>
+        <li><b>Docs/Slides:</b> “Summarize this slide and give me three talking points with transitions.”</li>
+        <li><b>Learning/Language:</b> “Explain what they just said in simpler English and give me a short reply.”</li>
+        <li><b>Coding/Debugging:</b> “From what I described, list 3 likely root causes to check.”</li>
+      </ul>
+    </div>
+
+    <!-- Why InshuVerse AI is special -->
+    <div class="card">
+      <h2>Why InshuVerse AI is Special</h2>
+      <ul>
+        <li><b>Precision over noise:</b> You control <i>when</i> to listen. No accidental, mistimed triggers in meetings or interviews.</li>
+        <li><b>Full user control:</b> Choose the input device, decide how long to listen, and stop exactly when you want an answer.</li>
+        <li><b>Context-aware:</b> Uses your Profile and optional Job/Meeting context to tailor answers to you.</li>
+        <li><b>Clear, confident phrasing:</b> Delivers concise, professional answers you can say as-is or copy/paste.</li>
+        <li><b>Works for any profession:</b> Simple enough for anyone; powerful enough for pros.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Troubleshooting</h2>
+      <ul>
+        <li class="ok">Mic denied? Re-open app after allowing in system settings.</li>
+        <li class="warn">No screenshots on Mac? Enable Screen Recording for InshuVerse AI and restart.</li>
+        <li class="danger">Still stuck? Reboot the app or check your network.</li>
+      </ul>
+    </div>
+
+    <div class="footer">A product from <a href="https://lazyjobseeker.com" target="_blank" rel="noopener">InshuVerse AI</a></div>
+  </div>
+</body>
+</html>

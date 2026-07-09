@@ -1,0 +1,352 @@
+/* Enhanced Error Handler CSS for Angel AI Assistant */
+/* Professional error messages with clear visual hierarchy */
+
+.error-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #ef4444;
+  z-index: 10001;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 320px;
+  max-width: 400px;
+}
+
+.error-container.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.error-container.hiding {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+/* Error severity levels */
+.error-container.error-low {
+  border-left-color: #f59e0b;
+  background: rgba(255, 251, 235, 0.95);
+}
+
+.error-container.error-medium {
+  border-left-color: #ef4444;
+  background: rgba(254, 242, 242, 0.95);
+}
+
+.error-container.error-high {
+  border-left-color: #dc2626;
+  background: rgba(254, 226, 226, 0.95);
+  box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.error-icon {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.error-text h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: center;
+}
+
+.error-message {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.error-suggestions {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.error-suggestions p {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.error-suggestions ul {
+  margin: 0;
+  padding-left: 16px;
+  list-style-type: disc;
+}
+
+.error-suggestions li {
+  font-size: 12px;
+  color: #4b5563;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.error-suggestions li:last-child {
+  margin-bottom: 0;
+}
+
+.error-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.retry-btn,
+.dismiss-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.retry-btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.retry-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.retry-btn:active {
+  transform: translateY(0);
+}
+
+.dismiss-btn {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.dismiss-btn:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.dismiss-btn:active {
+  background: #d1d5db;
+}
+
+/* Category-specific styling */
+.error-container[data-category="network"] {
+  border-left-color: #3b82f6;
+}
+
+.error-container[data-category="auth"] {
+  border-left-color: #f59e0b;
+}
+
+.error-container[data-category="rate_limit"] {
+  border-left-color: #8b5cf6;
+}
+
+.error-container[data-category="quota"] {
+  border-left-color: #ef4444;
+}
+
+.error-container[data-category="timeout"] {
+  border-left-color: #6b7280;
+}
+
+.error-container[data-category="service_overload"] {
+  border-left-color: #f97316;
+}
+
+.error-container[data-category="audio"] {
+  border-left-color: #10b981;
+}
+
+.error-container[data-category="image"] {
+  border-left-color: #8b5cf6;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .error-container {
+    background: rgba(17, 24, 39, 0.95);
+    border-left-color: #ef4444;
+  }
+  
+  .error-container.error-low {
+    background: rgba(45, 30, 5, 0.95);
+  }
+  
+  .error-container.error-medium {
+    background: rgba(45, 15, 15, 0.95);
+  }
+  
+  .error-container.error-high {
+    background: rgba(60, 15, 15, 0.95);
+  }
+  
+  .error-text h3 {
+    color: #f9fafb;
+  }
+  
+  .error-message {
+    color: #d1d5db;
+  }
+  
+  .error-suggestions {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
+  }
+  
+  .error-suggestions p {
+    color: #f9fafb;
+  }
+  
+  .error-suggestions li {
+    color: #9ca3af;
+  }
+  
+  .dismiss-btn {
+    background: #374151;
+    color: #9ca3af;
+    border-color: #4b5563;
+  }
+  
+  .dismiss-btn:hover {
+    background: #4b5563;
+    color: #d1d5db;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .error-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: none;
+    padding: 16px;
+  }
+  
+  .error-text h3 {
+    font-size: 15px;
+  }
+  
+  .error-message {
+    font-size: 13px;
+  }
+  
+  .error-suggestions {
+    padding: 10px;
+  }
+  
+  .error-suggestions p {
+    font-size: 12px;
+  }
+  
+  .error-suggestions li {
+    font-size: 11px;
+  }
+  
+  .error-actions {
+    flex-direction: column;
+  }
+  
+  .retry-btn,
+  .dismiss-btn {
+    width: 100%;
+    padding: 10px 16px;
+  }
+}
+
+/* Animation for multiple errors */
+.error-container:nth-child(2) {
+  top: 100px;
+}
+
+.error-container:nth-child(3) {
+  top: 180px;
+}
+
+.error-container:nth-child(4) {
+  top: 260px;
+}
+
+/* Pulse animation for high severity errors */
+.error-container.error-high {
+  animation: pulse-error 2s ease-in-out infinite;
+}
+
+@keyframes pulse-error {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+  }
+  50% {
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+  }
+}
+
+/* Success state for resolved errors */
+.error-container.resolved {
+  border-left-color: #10b981;
+  background: rgba(236, 253, 245, 0.95);
+}
+
+.error-container.resolved .error-icon {
+  color: #10b981;
+}
+
+.error-container.resolved .error-text h3 {
+  color: #065f46;
+}
+
+.error-container.resolved .error-message {
+  color: #047857;
+}
+
+/* Loading state for retry actions */
+.retry-btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.retry-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}

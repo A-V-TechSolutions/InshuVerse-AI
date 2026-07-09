@@ -1,0 +1,656 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Angel AI — Design System Override
+   Palette: Deep Dark · White · Indigo (#6366f1)
+   Loaded LAST so it overrides all previous stylesheet rules.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. TOKEN OVERRIDES ──────────────────────────────────────────────────── */
+:root {
+  --primary:          #6366f1;
+  --primary-dark:     #4f46e5;
+  --primary-light:    #a5b4fc;
+  --gradient-start:   #6366f1;
+  --gradient-end:     #8b5cf6;
+  --accent-1:         #8b5cf6;
+  --accent-2:         #22d3ee;
+  --success:          #22c55e;
+  --success-dark:     #16a34a;
+  --warning:          #f59e0b;
+  --danger:           #ef4444;
+  --text:             #1e293b;
+  --text-light:       #64748b;
+  --background:       #0f172a;
+  --card:             #FFFFFF;
+  --border:           #E5E7EB;
+  --radius-sm:        0.375rem;
+  --radius:           0.5rem;
+  --radius-lg:        0.75rem;
+  --shadow-sm:        0 1px 2px rgba(0,0,0,0.12);
+  --shadow:           0 4px 16px rgba(0,0,0,0.25);
+  --shadow-lg:        0 12px 32px rgba(0,0,0,0.35);
+  --transition:       all 0.2s ease;
+  --glass-bg:         rgba(10,10,10,0.80);
+  --glass-border:     rgba(255,255,255,0.10);
+  --glass-inner:      inset 0 1px 1px rgba(255,255,255,0.06);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.55);
+}
+
+/* ── 2. BODY — must stay transparent so Electron's transparent frameless
+       BrowserWindow shows the rounded `.container` as a floating card.
+       Painting an opaque dark fill here fills the entire window rectangle
+       on Windows (no native rounded mask) and creates a black layer behind
+       the CSS-rounded `.container`. On macOS the same opaque fill also
+       defeats the `vibrancy: 'sidebar'` backing because the renderer paints
+       over it. The dark surface is now provided by `.container` (below),
+       modals, and the sign-in / welcome screens which all carry their own
+       opaque backgrounds. */
+body {
+  background: transparent !important;
+  color: #FFFFFF !important;
+}
+body::before { display: none !important; }
+
+/* ── 3. BACKGROUND BLOBS — hide the old blue blobs ─────────────────────── */
+.bg-blobs { display: none !important; }
+
+/* ── 4. CONTAINER — dark glass panel ──────────────────────────────────────
+   Background alpha is set high (0.97) so the visible dashboard color is
+   determined almost entirely by this rule, not by whatever sits behind the
+   BrowserWindow. On macOS the window is `transparent: true` with a `sidebar`
+   vibrancy material applied; with the previous 0.82 alpha + saturate(180%)
+   stack, ~18% of the underlying vibrancy/wallpaper bled through and the
+   180% saturation amplified any blue/violet cast. The visible symptom was
+   the MacBook Air's built-in P3 panel rendering a noticeably bluer card
+   than a Mac mini/Studio on an external display, even with appearance
+   forced to dark.
+
+   At 0.97 alpha the dashboard reads as the exact same dark navy on every
+   Mac regardless of wallpaper, display panel, or color profile. The faint
+   3% translucency preserves the subtle "the window is a glass card, not a
+   solid rectangle" cue around the rounded edge.
+
+   Transparent-mode is unaffected: `body.transparent-mode .container`
+   (line 506) overrides this rule with `rgba(0,0,0,0.08)` so the see-
+   through Hide-Mode aesthetic still works as before. */
+.container {
+  background: rgba(15,23,42,0.97) !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 20px 60px rgba(0,0,0,0.7) !important;
+  backdrop-filter: blur(24px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(110%) !important;
+}
+
+/* ── 5. HEADER ───────────────────────────────────────────────────────────── */
+.header {
+  background: rgba(15,23,42,0.75) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+.header-title { color: #FFFFFF !important; }
+#draggableHeader::after {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0),
+    rgba(99,102,241,0.30),
+    rgba(255,255,255,0)
+  ) !important;
+}
+
+/* ── 6. HEADER LOGO — monochrome white (no purple gradient) ─────────────── */
+.header-logo {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.85) !important;
+  background-clip: unset !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* ── 7. CHAT MESSAGES background ────────────────────────────────────────── */
+.chat-messages {
+  background: transparent !important;
+}
+
+/* ── 8. MESSAGE BUBBLES ──────────────────────────────────────────────────── */
+/* AI bubble — dark charcoal (matches Hide-mode aesthetic) */
+.message-content {
+  background: #141b2d !important;
+  color: #dde8ff !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.45) !important;
+}
+/* User bubble — near-black, clearly distinct from the dark-grey AI bubble */
+.message-user .message-content {
+  background: #07090f !important;
+  color: #f0f4ff !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.55) !important;
+}
+.message-user .message-content a { color: #93c5fd !important; }
+.message-user .message-content code {
+  background: rgba(255,255,255,0.10) !important;
+  color: #c7d7ff !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+}
+
+/* Inline list bullet accent — softer blue for dark bubbles */
+.message-content ul li::before { color: #7aa2f7 !important; }
+.message-content a { color: #93c5fd !important; }
+.message-content a:hover { color: #bfdbfe !important; }
+
+/* Inline code — readable on both AI and user dark backgrounds */
+.message-content code {
+  background: rgba(255,255,255,0.09) !important;
+  color: #a5c8ff !important;
+  border: 1px solid rgba(255,255,255,0.13) !important;
+}
+/* Heading text inside dark bubbles */
+.message-content h1, .message-content h2, .message-content h3,
+.message-content h4, .message-content h5, .message-content h6 {
+  color: #e8eeff !important;
+}
+
+/* ── 9. CONTROLS BAR ────────────────────────────────────────────────────── */
+.controls {
+  background: rgba(15,23,42,0.78) !important;
+  border-top: 1px solid rgba(255,255,255,0.07) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+.controls::before {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0),
+    rgba(99,102,241,0.22),
+    rgba(255,255,255,0)
+  ) !important;
+}
+
+/* ── 10. MIC BUTTON — indigo ─────────────────────────────────────────────── */
+.mic-button {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  border: 1px solid rgba(255,255,255,0.35) !important;
+  box-shadow: 0 6px 20px rgba(99,102,241,0.35) !important;
+}
+.mic-button i { color: #FFFFFF !important; }
+.mic-button:hover {
+  box-shadow: 0 8px 24px rgba(99,102,241,0.45) !important;
+}
+.mic-button.recording {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  box-shadow: 0 6px 20px rgba(239,68,68,0.45) !important;
+}
+.mic-button.recording i { color: #FFFFFF !important; }
+
+/* ── 11. SMALL ICON BUTTONS (reset, screenshot, send) ───────────────────── */
+.reset-button {
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+}
+.reset-button:hover { background: rgba(255,255,255,0.15) !important; }
+.reset-button i { color: #FFFFFF !important; }
+
+/* ── 12. TOGGLE SWITCH — compact ─────────────────────────────────────────── */
+.toggle-switch.compact .toggle-label {
+  background: rgba(255,255,255,0.14) !important;
+  border-color: rgba(255,255,255,0.22) !important;
+}
+.toggle-switch.compact .toggle-input:checked + .toggle-label {
+  background: #6366f1 !important;
+  border-color: #4f46e5 !important;
+}
+.toggle-switch.compact .toggle-label:before {
+  background: #FFFFFF !important;
+  border-color: rgba(255,255,255,0.3) !important;
+}
+.toggle-text { color: #a5b4fc !important; }
+
+/* ── 13. MODERN SWITCH (hide mode) ───────────────────────────────────────── */
+.modern-switch .slider {
+  background: rgba(255,255,255,0.12) !important;
+  border-color: rgba(255,255,255,0.20) !important;
+}
+.modern-switch input[type="checkbox"]:checked + .slider {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6) !important;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.35) !important;
+}
+
+/* ── 14. ACTION BUTTONS ──────────────────────────────────────────────────── */
+.action-button.primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.30) !important;
+}
+.action-button.primary:hover {
+  box-shadow: 0 4px 16px rgba(99,102,241,0.45) !important;
+}
+.action-button.secondary {
+  background: rgba(255,255,255,0.07) !important;
+  color: #E5E7EB !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+}
+.action-button.secondary:hover {
+  background: rgba(255,255,255,0.13) !important;
+}
+
+/* ── 15. SETTINGS MODAL — dark glassmorphic ──────────────────────────────── */
+
+/* The outer pane — dark glass card */
+.apikey-modal-content {
+  background: rgba(15, 23, 42, 0.88) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.55) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  color: #e5e7eb !important;
+  border-radius: 16px !important;
+}
+
+/* Force all text inside the modal to light color */
+.apikey-modal-content * { color: #e5e7eb !important; }
+
+/* Top accent stripe — indigo glow */
+.apikey-modal-content::before {
+  background: linear-gradient(90deg, transparent, rgba(99,102,241,0.40), transparent) !important;
+}
+
+/* Header area */
+.settings-header { border-bottom: 1px solid rgba(255,255,255,0.08) !important; }
+.settings-title  { color: #ffffff !important; font-size: 0.92rem !important; font-weight: 700 !important; }
+.settings-subtitle { display: none !important; }
+
+/* Icon wrapper beside title — indigo gradient */
+.settings-brand-logo { filter: none !important; }
+.icon-wrapper {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.30) !important;
+}
+.icon-wrapper i { color: #FFFFFF !important; }
+
+/* Close button */
+.settings-close-btn {
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  color: #e5e7eb !important;
+}
+.settings-close-btn:hover {
+  background: rgba(239,68,68,0.15) !important;
+  border-color: rgba(239,68,68,0.30) !important;
+  color: #f87171 !important;
+}
+
+/* ── 16. SETTINGS TABS — indigo active state ─────────────────────────────── */
+
+/* Tab row */
+.settings-tabs,
+.tab-buttons {
+  background: rgba(255,255,255,0.04) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  gap: 0 !important;
+  padding: 0 !important;
+}
+
+/* Individual tab button */
+.tab-button {
+  font-size: 0.72rem !important;
+  font-weight: 500 !important;
+  padding: 0.48rem 0.75rem !important;
+  color: rgba(255,255,255,0.45) !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  letter-spacing: 0 !important;
+  min-width: unset !important;
+  box-shadow: none !important;
+  transition: color 0.15s, border-color 0.15s !important;
+}
+.tab-button:hover {
+  color: rgba(255,255,255,0.80) !important;
+  background: rgba(255,255,255,0.05) !important;
+  border-bottom-color: rgba(99,102,241,0.40) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.tab-button.active {
+  color: #ffffff !important;
+  background: transparent !important;
+  border-bottom-color: #6366f1 !important;
+  border-bottom-width: 2px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.tab-button i { opacity: 0.80 !important; }
+.tab-button.active i { opacity: 1 !important; color: #a5b4fc !important; }
+
+/* ── 17. SECTION PILLS inside settings ───────────────────────────────────── */
+.stg-section-pill {
+  color: #a5b4fc !important;
+  background: rgba(99,102,241,0.10) !important;
+  border: 1px solid rgba(99,102,241,0.22) !important;
+}
+.stg-section-pill i { color: #a5b4fc !important; }
+
+/* ── 18. FORM ELEMENTS ───────────────────────────────────────────────────── */
+.form-label,
+.setting-label { color: #e5e7eb !important; }
+.form-description,
+.setting-desc  { color: rgba(255,255,255,0.45) !important; }
+.apikey-modal-content select {
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  color: #f1f5f9 !important;
+  border-radius: 8px !important;
+}
+.apikey-modal-content textarea,
+.apikey-modal-content input[type="text"],
+.apikey-modal-content input[type="password"] {
+  background: rgba(255,255,255,0.07) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+  color: #f1f5f9 !important;
+}
+.apikey-modal-content textarea:focus,
+.apikey-modal-content input:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.22) !important;
+  outline: none !important;
+}
+
+/* ── 19. ACTION BUTTONS inside settings ──────────────────────────────────── */
+.apikey-modal-content button {
+  background: rgba(99,102,241,0.15) !important;
+  color: #a5b4fc !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(99,102,241,0.28) !important;
+}
+.apikey-modal-content button:hover {
+  background: rgba(99,102,241,0.25) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+/* Primary (save) buttons */
+.apikey-modal-content .action-button.primary,
+.apikey-modal-content button.save {
+  background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.30) !important;
+}
+.apikey-modal-content .action-button.primary:hover,
+.apikey-modal-content button.save:hover {
+  background: linear-gradient(135deg, #818cf8, #6366f1) !important;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.42) !important;
+  transform: none !important;
+}
+/* Destructive (cancel/logout) */
+.apikey-modal-content button.cancel,
+.apikey-modal-content button[data-action="cancel"] {
+  background: rgba(239,68,68,0.10) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239,68,68,0.25) !important;
+}
+.apikey-modal-content button.cancel:hover,
+.apikey-modal-content button[data-action="cancel"]:hover {
+  background: rgba(239,68,68,0.18) !important;
+}
+
+/* ── 20. RADIO / CHECKBOX accents ────────────────────────────────────────── */
+.apikey-modal-content input[type="radio"]    { accent-color: #6366f1 !important; }
+.apikey-modal-content input[type="checkbox"] { accent-color: #6366f1 !important; }
+
+/* ── 21. SETTINGS ROWS & SECTIONS ───────────────────────────────────────── */
+.settings-row { border-bottom: 1px solid rgba(255,255,255,0.06) !important; }
+.settings-section { border: 1px solid rgba(255,255,255,0.08) !important; background: rgba(255,255,255,0.03) !important; }
+
+/* MODAL CONTENT alias (hide/unhide confirmation, chat history, profile modal) */
+.modal-content {
+  background: rgba(15,23,42,0.92) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.55) !important;
+  color: #e5e7eb !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  border-radius: 16px !important;
+}
+.modal-content::before {
+  background: linear-gradient(90deg, transparent, rgba(99,102,241,0.30), transparent) !important;
+}
+.modal-header h3 { color: #ffffff !important; }
+.modal-header .subtitle { color: rgba(255,255,255,0.55) !important; font-size: 0.72rem !important; }
+.modal-header { border-bottom: 1px solid rgba(255,255,255,0.08) !important; padding-bottom: 0.6rem !important; }
+.modal-header .icon-wrapper {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.30) !important;
+}
+.modal-header .icon-wrapper i { color: #FFFFFF !important; }
+
+/* Profile tabs */
+.profile-tabs { background: rgba(255,255,255,0.06) !important; border-radius: 6px !important; }
+.profile-tab { color: rgba(255,255,255,0.55) !important; font-size: 0.72rem !important; font-weight: 500 !important; }
+.profile-tab.active {
+  background: rgba(99,102,241,0.88) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.20) !important;
+}
+
+/* ── 18. SIGN-IN / WELCOME SCREENS ──────────────────────────────────────── */
+.sign-in-screen, .welcome-screen {
+  background: #111111 !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.75) !important;
+}
+.product-name {
+  background: linear-gradient(90deg, #6366f1, #a5b4fc) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+.sign-in-btn, .start-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(99,102,241,0.35) !important;
+}
+.sign-in-btn:hover, .start-btn:hover {
+  box-shadow: 0 6px 20px rgba(99,102,241,0.50) !important;
+}
+
+/* ── 19. LOADING DOTS — indigo ────────────────────────────────────────────── */
+.loading-dot { background-color: #6366f1 !important; }
+
+/* ── 20. CODE COPY BUTTON ─────────────────────────────────────────────────── */
+.copy-button {
+  background: rgba(255,255,255,0.90) !important;
+  color: #111827 !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+}
+.copy-button:hover {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.35) !important;
+}
+.copy-button.copied {
+  background: #22c55e !important;
+  color: #FFFFFF !important;
+  border-color: #22c55e !important;
+}
+
+/* ── 21. LIVE TRANSCRIPT PILL ─────────────────────────────────────────────── */
+.live-transcript.listening .status-dot { background: #ef4444 !important; }
+.live-transcript.processing .status-dot { background: #6366f1 !important; }
+
+/* ── 22. SCREENSHOT BTN ──────────────────────────────────────────────────── */
+.screenshot-btn {
+  background: rgba(255,255,255,0.08) !important;
+  border-color: rgba(255,255,255,0.15) !important;
+  color: #FFFFFF !important;
+}
+.screenshot-btn:hover { background: rgba(255,255,255,0.16) !important; }
+
+/* ── 23. CONTENT area (chat) ─────────────────────────────────────────────── */
+.content {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ── 24. SCROLLBAR — subtle indigo tint ─────────────────────────────────── */
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(99,102,241,0.22) !important;
+}
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(99,102,241,0.38) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   25. HIDE MODE — TRUE CLEAR SEE-THROUGH
+   Goal: user can read VS Code / any app behind Angel with NO blur distortion.
+   Strategy:
+     • Container background → near-zero alpha (just a faint tint so elements
+       have a surface to sit on).
+     • backdrop-filter → removed entirely; OS compositing shows content as-is.
+     • Chrome bars (header/controls) → semi-transparent dark tint only.
+     • Message bubbles → opaque enough to read, but compact.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Body becomes OS-transparent (Electron sets vibrancy/transparent BG in main.js) */
+body.transparent-mode {
+  background: transparent !important;
+}
+
+/* ── Container: clear film, NO blur ──────────────────────────────────────── */
+body.transparent-mode .container {
+  background: rgba(0, 0, 0, 0.08) !important;   /* almost invisible tint    */
+  backdrop-filter: none !important;              /* no blur — crystal clear   */
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: none !important;
+}
+
+/* ── All inner panels: fully see-through ─────────────────────────────────── */
+body.transparent-mode .content,
+body.transparent-mode .chat-messages,
+body.transparent-mode .sign-in-screen,
+body.transparent-mode .welcome-screen {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ── Chrome bars: minimal dark strip so controls remain legible ──────────── */
+body.transparent-mode .header {
+  background: rgba(0,0,0,0.55) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.10) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+body.transparent-mode .controls {
+  background: rgba(0,0,0,0.55) !important;
+  border-top: 1px solid rgba(255,255,255,0.10) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+body.transparent-mode #chatInputContainer {
+  background: rgba(0,0,0,0.55) !important;
+  border-top: 1px solid rgba(255,255,255,0.10) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ── Message bubbles: opaque so text is readable over any desktop ──────────── */
+body.transparent-mode .message-content {
+  background: rgba(15,15,15,0.88) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.50) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+body.transparent-mode .message-user .message-content {
+  background: rgba(79,70,229,0.90) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(99,102,241,0.45) !important;
+  box-shadow: 0 2px 10px rgba(79,70,229,0.40) !important;
+}
+
+/* ── Interactive elements ─────────────────────────────────────────────────── */
+body.transparent-mode .gear-icon {
+  background: rgba(255,255,255,0.14) !important;
+  border: 1px solid rgba(255,255,255,0.24) !important;
+}
+body.transparent-mode .reset-button {
+  background: rgba(255,255,255,0.14) !important;
+  border: 1px solid rgba(255,255,255,0.24) !important;
+}
+body.transparent-mode .reset-button i,
+body.transparent-mode .controls i,
+body.transparent-mode #sendButton i,
+body.transparent-mode #toggleInputModeButton i { color: #FFFFFF !important; }
+
+body.transparent-mode .mic-button {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.45) !important;
+}
+body.transparent-mode .mic-button i { color: #FFFFFF !important; }
+
+/* ── Input fields ─────────────────────────────────────────────────────────── */
+body.transparent-mode #chatInput,
+body.transparent-mode textarea,
+body.transparent-mode input[type="text"],
+body.transparent-mode input[type="password"] {
+  background: rgba(0,0,0,0.70) !important;
+  border: 1px solid rgba(255,255,255,0.20) !important;
+  color: #FFFFFF !important;
+}
+body.transparent-mode #chatInput::placeholder { color: rgba(255,255,255,0.45) !important; }
+
+/* ── Quick action chips ───────────────────────────────────────────────────── */
+body.transparent-mode .quick-actions .action-tag {
+  background: rgba(0,0,0,0.78) !important;
+  border-color: rgba(255,255,255,0.20) !important;
+  color: #E5E7EB !important;
+}
+body.transparent-mode .quick-actions .action-tag:hover {
+  background: rgba(99,102,241,0.88) !important;
+  color: #FFFFFF !important;
+}
+
+/* ── Code blocks ──────────────────────────────────────────────────────────── */
+body.transparent-mode .message-content pre {
+  background: rgba(255,255,255,0.07) !important;
+  border: 1px solid rgba(255,255,255,0.16) !important;
+}
+body.transparent-mode .message-content pre code { color: #E5E7EB !important; }
+body.transparent-mode .message-content code:not(pre code) {
+  background: rgba(255,255,255,0.08) !important;
+  color: #a5b4fc !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+}
+
+/* ── Modal in hide mode: keep the dark glass, just drop backdrop-filter ───── */
+body.transparent-mode .modal-content {
+  background: rgba(10,10,15,0.96) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+  color: #FFFFFF !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+body.transparent-mode .modal-content * { color: #E5E7EB !important; }
+body.transparent-mode .modal-header h3 { color: #FFFFFF !important; }
+body.transparent-mode .profile-tabs { background: rgba(255,255,255,0.07) !important; }
+body.transparent-mode .profile-tab { color: rgba(255,255,255,0.60) !important; }
+body.transparent-mode .profile-tab.active {
+  background: rgba(99,102,241,0.88) !important;
+  color: #FFFFFF !important;
+}
+body.transparent-mode .form-label { color: #E5E7EB !important; }
+body.transparent-mode .modal-content textarea {
+  background: rgba(255,255,255,0.07) !important;
+  border-color: rgba(255,255,255,0.18) !important;
+  color: #FFFFFF !important;
+}
+

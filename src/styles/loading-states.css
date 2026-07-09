@@ -1,0 +1,306 @@
+/* Enhanced Loading States CSS for Angel AI Assistant */
+/* Modern, professional loading indicators with animations */
+
+.loading-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 10000;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 320px;
+  max-width: 400px;
+}
+
+.loading-container.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.loading-container.hiding {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.loading-container.success {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.loading-container.error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.loading-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Audio Wave Animation */
+.audio-wave {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  height: 40px;
+}
+
+.wave-bar {
+  width: 4px;
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+  border-radius: 2px;
+  animation: wave 1.5s ease-in-out infinite;
+}
+
+.wave-bar:nth-child(1) { animation-delay: 0s; }
+.wave-bar:nth-child(2) { animation-delay: 0.2s; }
+.wave-bar:nth-child(3) { animation-delay: 0.4s; }
+.wave-bar:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes wave {
+  0%, 100% { height: 8px; }
+  50% { height: 32px; }
+}
+
+/* Thinking Dots Animation */
+.thinking-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(45deg, #10b981, #3b82f6);
+  border-radius: 50%;
+  animation: bounce 1.4s ease-in-out infinite both;
+}
+
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+.dot:nth-child(3) { animation-delay: 0s; }
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Image Scan Animation */
+.image-scan {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.scan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-cell {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 4px;
+  animation: scan-pulse 2s ease-in-out infinite;
+}
+
+.grid-cell:nth-child(1) { animation-delay: 0s; }
+.grid-cell:nth-child(2) { animation-delay: 0.5s; }
+.grid-cell:nth-child(3) { animation-delay: 1s; }
+.grid-cell:nth-child(4) { animation-delay: 1.5s; }
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+  animation: scan-line 2s linear infinite;
+}
+
+@keyframes scan-pulse {
+  0%, 100% { 
+    background: rgba(139, 92, 246, 0.3);
+    transform: scale(1);
+  }
+  50% { 
+    background: rgba(139, 92, 246, 0.8);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(48px); }
+}
+
+/* Generic Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(59, 130, 246, 0.1);
+  border-left: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Loading Text */
+.loading-text h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  letter-spacing: -0.025em;
+}
+
+.loading-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.provider-status {
+  margin-top: 8px;
+}
+
+.provider-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #374151;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Progress Bar */
+.progress-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #6b7280;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .loading-container {
+    background: rgba(17, 24, 39, 0.95);
+    border-color: rgba(75, 85, 99, 0.3);
+  }
+  
+  .loading-text h3 {
+    color: #f9fafb;
+  }
+  
+  .loading-subtitle {
+    color: #9ca3af;
+  }
+  
+  .provider-indicator {
+    color: #d1d5db;
+    background: rgba(59, 130, 246, 0.2);
+  }
+  
+  .progress-text {
+    color: #9ca3af;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .loading-container {
+    min-width: 280px;
+    padding: 24px;
+  }
+  
+  .loading-icon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .loading-text h3 {
+    font-size: 16px;
+  }
+  
+  .loading-subtitle {
+    font-size: 13px;
+  }
+}

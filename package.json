@@ -1,0 +1,89 @@
+{
+  "name": "inshuverse-ai",
+  "productName": "InshuVerse AI",
+  "version": "6.0.6",
+  "description": "AI Desktop Assistant",
+  "main": "main.js",
+  "author": {
+    "name": "A&V Techsolutions",
+    "email": "avtechsolutions312@gmail.com"
+  },
+  "homepage": "https://github.com/A-V-TechSolutions/InshuVerse-AI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/A-V-TechSolutions/InshuVerse-AI.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "win": "electron-builder --win",
+    "publish": "electron-builder --publish always"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@nut-tree-fork/nut-js": "^4.2.6",
+    "axios": "^1.8.4",
+    "electron-updater": "^6.6.2",
+    "firebase": "^11.0.2",
+    "mammoth": "^1.9.0",
+    "openai": "^4.24.1",
+    "pdfjs-dist": "2.16.105",
+    "tmp": "^0.2.1",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "optionalDependencies": {
+    "create-dmg": "^7.1.0"
+  },
+  "build": {
+    "appId": "com.avtechsolutions.inshuverseai",
+    "productName": "InshuVerse AI",
+    "copyright": "© 2026 A&V Techsolutions",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "**/*",
+      "!backend/**/*",
+      "!dist/**/*",
+      "!*.log",
+      "!README.md"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icons/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "InshuVerse AI",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "A-V-TechSolutions",
+        "repo": "InshuVerse-AI",
+        "releaseType": "release"
+      }
+    ]
+  }
+}
