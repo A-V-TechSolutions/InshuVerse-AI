@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { db } = require("../firebase");
+const { sendCreditLowEmail } = require("../services/emailService");
 
 router.post("/debit", async (req, res) => {
     console.log("========== CREDIT API ==========");
@@ -47,6 +48,16 @@ router.post("/debit", async (req, res) => {
         await userRef.update({
             credits: remainingCredits
         });
+
+        // Send low credits email if credits are 3 or less
+        if (remainingCredits <= 3 && user.email) {
+            console.log('[CREDITS] Sending low credits email to:', user.email);
+            sendCreditLowEmail(user.email, user.name, remainingCredits).then(result => {
+                console.log('[CREDITS] Low credits email result:', result);
+            }).catch(err => {
+                console.error('[CREDITS] Failed to send low credits email:', err);
+            });
+        }
 
         return res.json({
             success: true,

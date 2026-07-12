@@ -1,31 +1,7 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 require('dotenv').config();
 
-// SMTP Configuration
-const smtpConfig = {
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT) || 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-};
-
-// Create transporter
-const transporter = nodemailer.createTransporter(smtpConfig);
-
-// Verify SMTP connection
-async function verifySmtpConnection() {
-  try {
-    await transporter.verify();
-    console.log('[EMAIL] SMTP server is ready to send emails');
-    return true;
-  } catch (error) {
-    console.error('[EMAIL] SMTP connection failed:', error);
-    return false;
-  }
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Welcome email template
 function getWelcomeEmailTemplate(userName, userEmail) {
@@ -147,40 +123,24 @@ function getWelcomeEmailTemplate(userName, userEmail) {
 // Send welcome email
 async function sendWelcomeEmail(userEmail, userName) {
   console.log('[EMAIL] sendWelcomeEmail called with:', { userEmail, userName });
-  console.log('[EMAIL] SMTP config check:', {
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    user: process.env.SMTP_USER ? 'SET' : 'NOT SET',
-    pass: process.env.SMTP_PASS ? 'SET' : 'NOT SET',
-    from: process.env.SMTP_FROM || process.env.SMTP_USER
-  });
 
   try {
-    const mailOptions = {
-      from: `"InshuVerse AI" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    const result = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'InshuVerse AI <onboarding@resend.dev>',
       to: userEmail,
       subject: 'Welcome to InshuVerse AI - Your AI Interview Assistant',
       html: getWelcomeEmailTemplate(userName, userEmail),
-    };
+    });
 
-    console.log('[EMAIL] Attempting to send email with options:', { from: mailOptions.from, to: mailOptions.to });
-    const info = await transporter.sendMail(mailOptions);
-    console.log('[EMAIL] Welcome email sent successfully:', info.messageId);
-    console.log('[EMAIL] Email response:', info);
-    return { success: true, messageId: info.messageId, response: info };
+    console.log('[EMAIL] Welcome email sent successfully:', result);
+    return { success: true, messageId: result.id, response: result };
   } catch (error) {
     console.error('[EMAIL] Failed to send welcome email:', error);
-    console.error('[EMAIL] Error details:', {
-      code: error.code,
-      command: error.command,
-      response: error.response,
-      responseCode: error.responseCode
-    });
     return { success: false, error: error.message, details: error };
   }
 }
 
-// Send credit low notification email
+// Low credits email template
 function getCreditLowEmailTemplate(userName, currentCredits) {
   return `
     <!DOCTYPE html>
@@ -261,18 +221,20 @@ function getCreditLowEmailTemplate(userName, currentCredits) {
   `;
 }
 
+// Send credit low notification email
 async function sendCreditLowEmail(userEmail, userName, currentCredits) {
+  console.log('[EMAIL] sendCreditLowEmail called with:', { userEmail, userName, currentCredits });
+
   try {
-    const mailOptions = {
-      from: `"InshuVerse AI" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    const result = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'InshuVerse AI <onboarding@resend.dev>',
       to: userEmail,
       subject: 'Low Credits Warning - InshuVerse AI',
       html: getCreditLowEmailTemplate(userName, currentCredits),
-    };
+    });
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('[EMAIL] Credit low email sent:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    console.log('[EMAIL] Credit low email sent:', result);
+    return { success: true, messageId: result.id };
   } catch (error) {
     console.error('[EMAIL] Failed to send credit low email:', error);
     return { success: false, error: error.message };
@@ -280,7 +242,6 @@ async function sendCreditLowEmail(userEmail, userName, currentCredits) {
 }
 
 module.exports = {
-  verifySmtpConnection,
   sendWelcomeEmail,
   sendCreditLowEmail,
 };
