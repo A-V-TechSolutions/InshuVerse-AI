@@ -1,10 +1,9 @@
 const express = require('express');
+const { db, FieldValue } = require('../firebase');
 const admin = require('firebase-admin');
-const { FieldValue } = require('firebase-admin/firestore');
 const { sendWelcomeEmail, sendLoginEmail } = require('../services/emailService');
 
 const router = express.Router();
-const db = admin.firestore();
 
 router.post("/login", async (req, res) => {
   try {
