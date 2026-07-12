@@ -34,7 +34,10 @@ setPersistence(auth, browserLocalPersistence)
 const db = getFirestore(firebaseApp);
 const provider = new GoogleAuthProvider();
 // Backend API URL
-const API_URL = "http://localhost:5000";
+const API_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:5000"
+    : "https://inshuverse-ai.onrender.com";
 
 // All credit / plan mutations flow through Cloud Functions (see
 // functions/index.js). The Admin SDK there bypasses firestore.rules, which

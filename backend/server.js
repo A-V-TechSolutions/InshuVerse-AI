@@ -13,6 +13,9 @@ app.get("/", (req, res) => {
     res.send("InshuVerse Backend Running 🚀");
 });
 
+app.use("/api/user", userRoutes);
+app.use("/api/credits", creditRoutes);
+
 const PORT = process.env.PORT || 5000;
 
 // Verify SMTP connection on startup
@@ -29,6 +32,3 @@ verifySmtpConnection().then(isConnected => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
-app.use("/api/user", userRoutes);
-app.use("/api/credits", creditRoutes);
