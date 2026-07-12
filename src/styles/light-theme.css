@@ -1,0 +1,317 @@
+/* ============================================================
+   InshuVerse AI — LIGHT THEME OVERRIDE
+   ------------------------------------------------------------
+   Drop-in stylesheet that converts every remaining dark surface
+   in the app to a light design. It does NOT touch Hide-Mode
+   (transparent-mode) styling, since that mode is intentionally
+   translucent/see-through for screen sharing — turning it light
+   would break its purpose.
+
+   HOW TO USE
+   1. Save this file as e.g. src/styles/light-theme.css
+   2. Add it as the LAST stylesheet link in <head>, after
+      design-system.css:
+        <link rel="stylesheet" href="src/styles/light-theme.css">
+   3. Reload the app.
+   ============================================================ */
+
+/* ---------- 1. Sign-in screen top nav bar ---------- */
+.gate-navbar {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+    backdrop-filter: blur(24px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+}
+.gate-navbar-brand span {
+    color: #0f172a !important;
+}
+.gate-navbar-link {
+    color: rgba(15, 23, 42, 0.55) !important;
+}
+.gate-navbar-link:hover {
+    background: rgba(15, 23, 42, 0.06) !important;
+    color: #0f172a !important;
+}
+.gate-navbar-link.active {
+    background: rgba(47, 209, 199, 0.14) !important;
+    color: #0e7c74 !important;
+}
+
+/* Sign-in / Welcome heading + eyebrow text (was near-white) */
+.gate-heading {
+    color: #0f172a !important;
+}
+.gate-eyebrow {
+    color: #0e7c74 !important;
+}
+
+/* ---------- 2. Welcome screen ---------- */
+.welcome-subtitle,
+.welcome-footer,
+.action-divider span,
+.feature-desc,
+.stat-label,
+.use-case-card p {
+    color: #475569 !important;
+}
+.welcome-footer a {
+    color: #4f46e5 !important;
+}
+.section-title,
+.use-case-card h3,
+.feature-title {
+    color: #0f172a !important;
+}
+.use-case-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+}
+.use-case-card:hover {
+    background: #ffffff !important;
+    border-color: rgba(99, 102, 241, 0.35) !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12) !important;
+}
+.use-case-tags .tag {
+    background: rgba(15, 23, 42, 0.06) !important;
+    color: #334155 !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+.use-case-arrow {
+    background: rgba(15, 23, 42, 0.06) !important;
+    color: #475569 !important;
+}
+.use-case-card:hover .use-case-arrow {
+    background: rgba(99, 102, 241, 0.16) !important;
+    color: #4f46e5 !important;
+}
+.feature-highlights {
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+.feature-item:hover {
+    background: rgba(99, 102, 241, 0.06) !important;
+}
+.welcome-stats {
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+.stat-divider {
+    background: rgba(15, 23, 42, 0.10) !important;
+}
+.welcome-secondary-btn {
+    background: rgba(15, 23, 42, 0.05) !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(15, 23, 42, 0.14) !important;
+}
+.welcome-secondary-btn:hover {
+    background: rgba(15, 23, 42, 0.09) !important;
+}
+
+/* ---------- 3. Draggable header (top drag strip) ---------- */
+#draggableHeader {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+    backdrop-filter: blur(32px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+}
+.header-logo,
+.header-sub {
+    color: #0f172a !important;
+}
+#hideModeHint {
+    color: #334155 !important;
+    background: linear-gradient(135deg, rgba(99,102,241,0.10), rgba(139,92,246,0.08)) !important;
+    border: 1px solid rgba(99, 102, 241, 0.22) !important;
+}
+#hideModeHint .hmh-kbd {
+    background: rgba(15, 23, 42, 0.06) !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(99, 102, 241, 0.30) !important;
+}
+
+/* ---------- 4. Bottom controls bar / chat input bar ---------- */
+.controls,
+#chatInputContainer,
+.input-area,
+.status-bar {
+    background: rgba(255, 255, 255, 0.94) !important;
+    border-top: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+.controls::before {
+    background: linear-gradient(90deg, transparent, rgba(15,23,42,0.16), transparent) !important;
+}
+.gear-icon,
+.reset-button {
+    background: rgba(15, 23, 42, 0.06) !important;
+    border: 1px solid rgba(15, 23, 42, 0.14) !important;
+    color: #0f172a !important;
+}
+.control-btn {
+    background: rgba(15, 23, 42, 0.05) !important;
+    border: 1px solid rgba(15, 23, 42, 0.12) !important;
+    color: #334155 !important;
+}
+.control-btn:hover {
+    background: rgba(15, 23, 42, 0.09) !important;
+}
+#chatInput {
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.14) !important;
+    color: #0f172a !important;
+}
+#chatInput::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* ---------- 5. Profile / Setup modal ("Let InshuVerse AI know what to do") ---------- */
+#profileInputModal {
+    background-color: rgba(15, 23, 42, 0.35) !important;
+}
+#profileInputModal .profile-modal-shell {
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    color: #1e293b !important;
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18) !important;
+}
+#profileInputModal .profile-modal-topbar {
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+#profileInputModal .profile-modal-title {
+    color: #0f172a !important;
+}
+#profileInputModal .profile-icon-btn {
+    background: rgba(15, 23, 42, 0.05) !important;
+    border: 1px solid rgba(15, 23, 42, 0.12) !important;
+    color: #334155 !important;
+}
+#profileInputModal .profile-icon-btn:hover {
+    background: rgba(99, 102, 241, 0.12) !important;
+    color: #0f172a !important;
+}
+#profileInputModal .profile-icon-btn--danger {
+    background: rgba(239, 68, 68, 0.08) !important;
+    border-color: rgba(239, 68, 68, 0.25) !important;
+    color: #dc2626 !important;
+}
+#profileInputModal .mode-selector-label {
+    color: #334155 !important;
+}
+#profileInputModal .mode-dropdown-select {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(15, 23, 42, 0.14) !important;
+}
+#profileInputModal .profile-tabs {
+    background: #f1f5f9 !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+#profileInputModal .profile-tab {
+    color: #64748b !important;
+}
+#profileInputModal .profile-tab.active {
+    background: rgba(99, 102, 241, 0.14) !important;
+    color: #4338ca !important;
+    border: 1px solid rgba(99, 102, 241, 0.30) !important;
+}
+#profileInputModal .form-label {
+    color: #1e293b !important;
+}
+#profileInputModal .form-description {
+    color: #64748b !important;
+}
+#profileInputModal textarea,
+#profileInputModal input[type="text"],
+#profileInputModal input[type="email"],
+#profileInputModal input[type="url"] {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(15, 23, 42, 0.12) !important;
+}
+#profileInputModal textarea:focus,
+#profileInputModal input:focus {
+    background: #ffffff !important;
+    border-color: rgba(99, 102, 241, 0.55) !important;
+}
+#profileInputModal .profile-modal-footer {
+    border-top: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+#profileInputModal .save-for-later-label {
+    color: #64748b !important;
+}
+#profileInputModal .sfl-box {
+    background: rgba(99, 102, 241, 0.10) !important;
+    border: 1px solid rgba(99, 102, 241, 0.24) !important;
+}
+#profileInputModal .sfl-box i {
+    color: #4f46e5 !important;
+}
+
+/* ---------- 6. Auth loading overlay fallback card ---------- */
+.auth-fallback {
+    border-top: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+.auth-fallback-title {
+    color: #0f172a !important;
+}
+.auth-fallback-subtitle,
+.auth-fallback-step {
+    color: #475569 !important;
+}
+.auth-fallback-step-num {
+    background: rgba(99, 102, 241, 0.14) !important;
+    color: #4338ca !important;
+}
+.auth-fallback-strong {
+    color: #4338ca !important;
+}
+.auth-fallback-url-input {
+    background: #f8fafc !important;
+    color: #334155 !important;
+    border: 1px solid rgba(15, 23, 42, 0.12) !important;
+}
+.auth-title,
+.auth-message {
+    color: #0f172a !important;
+}
+
+/* ---------- 7. Hide / Unhide confirmation popups ---------- */
+#hideConfirmModal .modal-content div,
+#unhideConfirmModal .modal-content div {
+    color: #475569 !important;
+}
+#hideConfirmModal .modal-content strong,
+#unhideConfirmModal .modal-content strong {
+    color: #0f172a !important;
+}
+#hideConfirmModal .subtitle,
+#unhideConfirmModal .subtitle {
+    color: #64748b !important;
+}
+
+/* ---------- 8. Out-of-credits / access-denied overlay ---------- */
+.access-denied-card {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+.access-denied-card h3 {
+    color: #0f172a !important;
+}
+.access-denied-card p {
+    color: #475569 !important;
+}
+.access-denied-secondary-btn {
+    background: rgba(15, 23, 42, 0.04) !important;
+    border: 1px solid rgba(15, 23, 42, 0.14) !important;
+    color: #334155 !important;
+}
+.access-denied-secondary-btn:hover {
+    background: rgba(15, 23, 42, 0.08) !important;
+}
+
+/* ---------- 9. General safety net ---------- */
+/* Any leftover light-gray-on-transparent text in gate screens */
+.gate-screen, .gate-card {
+    color: #1e293b !important;
+}

@@ -106,8 +106,8 @@ let currentSubscription = {}; // current user's subscription data
 // Generated with `node scripts/_gen_encrypted_keys.js`. Decrypted at startup.
 const DEFAULT_OPENAI_KEY_ENC      = "v1:vE4fAq+4K1/Dr4Lh:RO8RPcJPWzp5LcUY9BwydA==:0j1wmVo43/YI6bprUXT8gQD/eQwe3CoXoad5GmZ6PnOIs+tkQL807i0RRAtDbUXVAaIU/qE4bVyGpJj2Tlna972MYTCznJS/YQZM9/EEeK6u/qfz5W1+XqcoEIWcsy+ZSzMUrFNtWsnzrnWB4gEUaj84d7Jpg8kR03aPBkOekkiRBVm5nRRgM++xrNjb9XxOLgaHpsb7+YRjAcsel2GsjbknsIY=";
 const PREMIUM_OPENAI_KEY_ENC      = "v1:bpiyEHEr1awb4eoW:16nkesHtT/qTQdab9t2w3A==:NGreRMELwzJ16AtebTNwZGoKXIHdC7CWPT7Icyt0ZYyPt9L5UQKY+M2BKKyha4ooWObZQWaUGT0d5egbsyCszbxATxe+6umbThHSvJuxRk/nu1MJy24aCOfA+a5EfEb4O4XIGESdfUdr6JehdDjqxLymPmaSDkT+zNkIA3JvFBqF0PRzZ+FBO2zuF3z01v/3V9mG/AvdRD2/GQcMTkLnSTEhHzo=";
-const DEFAULT_GEMINI_KEY_ENC      = "v1:6pQhdWhqzxd5Qm0I:0vC7f9UZ5fPvpLPulJc6pA==:6LfYyJAVaJ4MqxQ/0QvEjcx38MOg6DWYO0JN5dwPWD7pKBNqpA+d";
-const GEMINI_FALLBACK_FREE_KEY_ENC = "v1:FdEDa95R+m/EIKNV:g+20i5ys7XqJ4POUnoybOQ==:paFyRs4Ker6zlAuY/NLUgVl/VNkovSlqHZi12nA9vfR6xPfWRlwv";
+const DEFAULT_GEMINI_KEY_ENC      = "v1:nLK8J9+/s73Yfb2X:Dgoc4LEoNlwPD84TigQ2+g==:cvk5KOH7DOg4QRJW6FN5nQdhhVLfGb900cQVacHYu8BzI2djlSmTrdG9TtdQ8QgkmjhYkUs=";
+const GEMINI_FALLBACK_FREE_KEY_ENC = "v1:nLK8J9+/s73Yfb2X:Dgoc4LEoNlwPD84TigQ2+g==:cvk5KOH7DOg4QRJW6FN5nQdhhVLfGb900cQVacHYu8BzI2djlSmTrdG9TtdQ8QgkmjhYkUs=";
 const DEFAULT_DEEPGRAM_KEY_ENC    = "v1:sQ52aLW8Y3UU6iSe:5iiMcI6M1vu04E1S8TK8Nw==:Hi5TETe3nqdGsifTt5mySjH0aHkKAXGjCF3t6wNeWQSZapa7akzbPw==";
 // Free-tier Deepgram key — separate Deepgram project so free traffic bills
 // against its own budget and any throttling/quarantine cannot affect paid
@@ -122,7 +122,7 @@ const ASSEMBLYAI_PRO_KEY_ENC      = "v1:MWDpFxcCqQItqEAd:si3Dfe27D9onjSQTVzlGjA=
 // Second free-tier Gemini key — registered alongside GEMINI_FALLBACK_FREE_KEY
 // in the gemini/free bucket so a single quota burst cannot take the whole
 // free Gemini pool offline.
-const GEMINI_FALLBACK_FREE_KEY_2_ENC = "v1:NbMVCAovjMvb4Cqw:D6cpVZ52SA+N81ZqTP+AMA==:lLc9QLCG7gd1BvloVjOzUntMPtC71TZLdU94U51fEjxogGNQFz52";
+const GEMINI_FALLBACK_FREE_KEY_2_ENC = "v1:nLK8J9+/s73Yfb2X:Dgoc4LEoNlwPD84TigQ2+g==:cvk5KOH7DOg4QRJW6FN5nQdhhVLfGb900cQVacHYu8BzI2djlSmTrdG9TtdQ8QgkmjhYkUs=";
 
 const DEFAULT_OPENAI_KEY        = cryptoVault.decryptApp(DEFAULT_OPENAI_KEY_ENC);
 const PREMIUM_OPENAI_KEY        = cryptoVault.decryptApp(PREMIUM_OPENAI_KEY_ENC);
@@ -569,7 +569,7 @@ class BackgroundServiceManager {
 
     try {
       // Create menu bar icon
-      const iconPath = path.join(__dirname, 'assets/icons/icon.png');
+      const iconPath = path.join(__dirname, 'assets/icons/Icon.png');
       let icon;
 
       if (fs.existsSync(iconPath)) {
@@ -621,7 +621,7 @@ class BackgroundServiceManager {
 
     try {
       // Create system tray icon
-      const iconPath = path.join(__dirname, 'assets/icons/icon.ico');
+      const iconPath = path.join(__dirname, 'assets/icons/Inshuverse AI ICO.ico');
       let icon;
 
       if (fs.existsSync(iconPath)) {
@@ -707,7 +707,8 @@ ipcMain.on('win-maximize', () => {
 
 ipcMain.on('win-close', () => {
   const win = mainWindow;
-  if (win && !win.isDestroyed()) win.close();
+  if (win && !win.isDestroyed()) win.destroy();
+  app.quit();
 });
 
 // Broadcast maximize/restore state changes so the renderer can update the
@@ -813,7 +814,7 @@ function createWindow() {
     transparent: true,
     frame: false,
     skipTaskbar: false,
-    icon: path.join(__dirname, isWindows ? 'assets/icons/icon.ico' : 'assets/icons/icon.png'),
+    icon: path.join(__dirname, isWindows ? 'assets/icons/Inshuverse AI ICO.ico' : 'assets/icons/Icon.png'),
     backgroundColor: '#00000000',
     resizable: true,
 
@@ -822,8 +823,7 @@ function createWindow() {
       contextIsolation: false,
       backgroundThrottling: false,
       webSecurity: true,
-      devTools: false,
-      show: true
+      devTools: false
     }
   };
 
@@ -840,6 +840,13 @@ function createWindow() {
   if (process.platform === 'win32') {
     windowOptions.hasShadow = false;
     windowOptions.roundedCorners = false;
+    windowOptions.show = true; // Force show on Windows
+    // Center window on screen
+    const { screen } = require('electron');
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+    windowOptions.x = Math.round((width - 624) / 2);
+    windowOptions.y = Math.round((height - 600) / 2);
+    console.log(`[WINDOW] Windows window position: x=${windowOptions.x}, y=${windowOptions.y}`);
   }
 
   // Create the window
@@ -1368,26 +1375,22 @@ ipcMain.on('screenshot-summary', async (_event, base64Png) => {
     } catch (_) {}
 
     // ── H4: Auto-restore Hide Mode from persisted state ──────────────────
-    // If the user had Hide Mode enabled when the app last closed, re-enable
-    // it now so protection is active from the very first frame. We wait
-    // until did-finish-load so the renderer's toggle UI can receive the
-    // screen-sharing-active IPC and sync its checked state.
-    try {
-      if (loadHideModeFlag()) {
-        console.log('[HIDE] Restoring Hide Mode from persisted state…');
-        enableHideMode();
-        // Notify the renderer so the toggle checkbox reflects the state.
-        mainWindow.webContents.send('hide-mode-restored', true);
-      }
-    } catch (restoreErr) {
-      console.warn('[HIDE] Auto-restore failed:', restoreErr && restoreErr.message ? restoreErr.message : restoreErr);
-    }
+    // DISABLED: Hide mode state is no longer persisted to avoid unwanted restoration
+    // on app launch. Users must manually enable hide mode each session.
 
     // ── Production hardening ──────────────────────────────────────────────
     try {
       await mainWindow.webContents.executeJavaScript(`
         (function() {
           try {
+            // Clear localStorage on startup
+            try {
+              localStorage.clear();
+              console.log('[STORAGE] LocalStorage cleared on startup');
+            } catch (e) {
+              console.error('[STORAGE] Failed to clear localStorage:', e);
+            }
+
             // Production hardening in renderer
             try {
               document.addEventListener('contextmenu', (e) => e.preventDefault(), true);
@@ -1438,10 +1441,17 @@ ipcMain.on('screenshot-summary', async (_event, base64Png) => {
     mainWindow.setSkipTaskbar(false);
     app.setAppUserModelId('com.lazyjobseeker.angel');
 
-    // Ensure always on top is set for Windows
-    syncAlwaysOnTop('window-ready-windows');
+    mainWindow.once('ready-to-show', () => {
+      console.log('Window ready-to-show on Windows');
+      mainWindow.show();
+      mainWindow.focus();
+      mainWindow.moveTop();
 
-    console.log('Windows window setup complete');
+      // Ensure always on top is set for Windows
+      syncAlwaysOnTop('window-ready-windows');
+
+      console.log('Windows window setup complete');
+    });
   }
 
   console.log('Main window created');
@@ -2294,12 +2304,169 @@ ipcMain.handle('sign-in', async () => {
 
               // ALWAYS fetch fresh plan and credits data from the server/database
               console.log('[SIGN-IN] Fetching fresh plan and credits data from server for user:', currentUser.uid);
-              const planCheck = await checkUserPlan(currentUser.uid);
+              const planCheck = await checkUserPlan(currentUser.uid, currentUser.email, currentUser.displayName);
               const hasAccess = planCheck.hasAccess;
 
               // Close the server and respond to the browser
               res.writeHead(200, { 'Content-Type': 'text/html' });
-              res.end('<html><body><h1>Authentication successful!</h1><p>You can close this window.</p></body></html>');
+              res.end(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Successful</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s ease-in-out infinite;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+            }
+        }
+        .checkmark {
+            width: 60px;
+            height: 60px;
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            animation: drawCheck 0.6s ease-out 0.3s forwards;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+        }
+        @keyframes drawCheck {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 8s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 12s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 10s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 14s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 9s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 11s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 2s; animation-duration: 13s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 4s; animation-duration: 10s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 1s; animation-duration: 12s; }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    <div class="container">
+        <div class="success-icon">
+            <svg class="checkmark" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        <h1>Authentication Successful!</h1>
+        <p>You can now close this window and return to the app.</p>
+    </div>
+</body>
+</html>
+`);
               cleanup('success');
               restoreAlwaysOnTopAfterAuth('sign-in-success');
 

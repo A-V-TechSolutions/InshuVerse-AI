@@ -398,9 +398,8 @@ function registerHideModeHandlers() {
     try {
       if (isScreenSharing) enableHideMode();
       else                 disableHideMode();
-      // Persist the new toggle state so auto-restore can apply it on the
-      // next launch without requiring the user to manually re-enable.
-      saveHideModeFlag(!!isScreenSharing);
+      // DISABLED: Hide mode state is no longer persisted to avoid unwanted restoration
+      // saveHideModeFlag(!!isScreenSharing);
       // Surface diagnostics so the renderer can show a warning toast when
       // the OS cannot fully apply the protection (older Windows builds,
       // missing Safe Mode on flaky GPU drivers, etc.).

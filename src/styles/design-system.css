@@ -1,656 +1,714 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   Angel AI — Design System Override
-   Palette: Deep Dark · White · Indigo (#6366f1)
-   Loaded LAST so it overrides all previous stylesheet rules.
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════
+   INSHUVERSE AI — DESIGN SYSTEM v2
+   "Slate & Signal" identity: cool graphite / warm paper text / cyan-teal signal.
+   ──────────────────────────────────────────────────────────────────────
+   Same safe-patch architecture as the previous pass: loaded LAST (see
+   index.html <head>), re-skins the app on top of the inline stylesheet.
+   Changes ONLY visual tokens and selectors — no HTML is edited, no
+   IDs/classes are renamed, no JS/IPC behaviour is touched. Hide Mode's
+   functional transparency rules (backdrop-filter / near-zero alpha on
+   body.transparent-mode surfaces) are left alone; only their *color*
+   values are re-themed.
 
-/* ── 1. TOKEN OVERRIDES ──────────────────────────────────────────────────── */
+   Why this direction: the previous black/amber pass read as an
+   "instrument panel." That's the right instinct for a status overlay,
+   but amber-on-black is also the single most common AI-app palette
+   right now. This pass keeps the instrument-panel logic (status states
+   need to be legible at a glance, motion should mean something) but
+   moves the surface to a cooler graphite (not true black — softer to
+   look at for long sessions) and swaps the accent to a cyan-teal
+   "signal" color that reads as calm/attentive rather than alarm-adjacent.
+
+   Signature element: the "signal ring" — a concentric pulse used
+   consistently for anything meaning "the app is listening / thinking /
+   live." It appears on the status dot, the mic button, and replaces the
+   generic spinner in loading-states.css. One motif, three places,
+   instead of three unrelated animations.
+   ══════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ── 1. TOKENS ──────────────────────────────────────────────────────── */
 :root {
-  --primary:          #6366f1;
-  --primary-dark:     #4f46e5;
-  --primary-light:    #a5b4fc;
-  --gradient-start:   #6366f1;
-  --gradient-end:     #8b5cf6;
-  --accent-1:         #8b5cf6;
-  --accent-2:         #22d3ee;
-  --success:          #22c55e;
-  --success-dark:     #16a34a;
-  --warning:          #f59e0b;
-  --danger:           #ef4444;
-  --text:             #1e293b;
-  --text-light:       #64748b;
-  --background:       #0f172a;
-  --card:             #FFFFFF;
-  --border:           #E5E7EB;
-  --radius-sm:        0.375rem;
-  --radius:           0.5rem;
-  --radius-lg:        0.75rem;
-  --shadow-sm:        0 1px 2px rgba(0,0,0,0.12);
-  --shadow:           0 4px 16px rgba(0,0,0,0.25);
-  --shadow-lg:        0 12px 32px rgba(0,0,0,0.35);
-  --transition:       all 0.2s ease;
-  --glass-bg:         rgba(10,10,10,0.80);
-  --glass-border:     rgba(255,255,255,0.10);
-  --glass-inner:      inset 0 1px 1px rgba(255,255,255,0.06);
-  --glass-shadow:     0 8px 32px rgba(0,0,0,0.55);
+    /* Core surfaces */
+    --ds-black:        #121319;
+    --ds-surface-0:     #181A21;   /* .container fill */
+    --ds-surface-1:     #1E212A;   /* header / controls bars */
+    --ds-surface-2:     #242732;   /* modals, elevated cards */
+    --ds-surface-3:     #2C303D;   /* inputs, chips, hover */
+    --ds-surface-4:     #363B4A;   /* hover on surface-3 */
+
+    --ds-border:        rgba(255,255,255,0.08);
+    --ds-border-strong: rgba(255,255,255,0.17);
+    --ds-border-soft:   rgba(255,255,255,0.04);
+
+    /* Text */
+    --ds-white:      #F1F2F6;
+    --ds-white-dim:  #9CA0AC;
+    --ds-white-faint:#5D616C;
+
+    /* Signature accent — cyan-teal "signal" */
+    --ds-signal:       #2FD1C7;
+    --ds-signal-dim:   #22A89F;
+    --ds-signal-deep:  #156059;
+    --ds-signal-glow:  rgba(47,209,199,0.35);
+    --ds-signal-wash:  rgba(47,209,199,0.12);
+    --ds-signal-ink:   #06201D; /* text-on-signal */
+
+    /* Functional colors (kept semantically distinct from the accent) */
+    --ds-success: #7ED957;
+    --ds-success-dim: rgba(126,217,87,0.16);
+    --ds-danger:  #FF6B5E;
+    --ds-danger-dim: rgba(255,107,94,0.16);
+    --ds-info:    #6FA8DC;
+
+    /* Bubbles */
+    --ds-user-bubble: #101218;
+    --ds-ai-bubble:   #1F222B;
+
+    /* Remap the original design tokens so every var(--x) in the inline
+       sheet automatically inherits the new palette. */
+    --primary:        var(--ds-signal);
+    --primary-dark:   var(--ds-signal-dim);
+    --primary-light:  #7EEDE5;
+    --gradient-start:  var(--ds-signal-dim);
+    --gradient-end:    var(--ds-signal);
+    --accent-1:        var(--ds-signal);
+    --accent-2:        var(--ds-info);
+    --success:         var(--ds-success);
+    --success-dark:    #58B23C;
+    --warning:         #F0B93E;
+    --danger:          var(--ds-danger);
+    --text:            var(--ds-white);
+    --text-light:      var(--ds-white-dim);
+    --background:      var(--ds-black);
+    --card:            var(--ds-surface-2);
+    --border:          var(--ds-border);
+    --radius-sm:       0.3rem;
+    --radius:          0.6rem;
+    --radius-lg:       0.9rem;
+    --shadow-sm:  0 1px 2px rgba(0,0,0,0.4);
+    --shadow:     0 6px 18px rgba(0,0,0,0.45);
+    --shadow-lg:  0 16px 40px rgba(0,0,0,0.55);
+    --glass-bg:     rgba(255,255,255,0.045);
+    --glass-border: rgba(255,255,255,0.13);
+    --glass-inner:  inset 0 1px 1px rgba(255,255,255,0.055);
+    --glass-shadow: 0 16px 44px rgba(0,0,0,0.55);
 }
 
-/* ── 2. BODY — must stay transparent so Electron's transparent frameless
-       BrowserWindow shows the rounded `.container` as a floating card.
-       Painting an opaque dark fill here fills the entire window rectangle
-       on Windows (no native rounded mask) and creates a black layer behind
-       the CSS-rounded `.container`. On macOS the same opaque fill also
-       defeats the `vibrancy: 'sidebar'` backing because the renderer paints
-       over it. The dark surface is now provided by `.container` (below),
-       modals, and the sign-in / welcome screens which all carry their own
-       opaque backgrounds. */
-body {
-  background: transparent !important;
-  color: #FFFFFF !important;
+/* ── 2. TYPOGRAPHY ──────────────────────────────────────────────────── */
+body, .content, .message-content, .modal-content, .apikey-modal-content,
+#profileInputModal, .settings-row, .setting-label, .setting-desc {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui,
+                 "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    letter-spacing: 0 !important;
 }
-body::before { display: none !important; }
+/* Display face for identity/heading moments — distinct from the Inter
+   body copy so the brand has a voice, used with restraint. */
+.header-title, .settings-title h3, .modal-header h3, .product-name,
+.profile-modal-title, #userguideTab .ug-block strong {
+    font-family: "Space Grotesk", "Inter", system-ui, sans-serif !important;
+    letter-spacing: -0.015em !important;
+    font-weight: 600 !important;
+}
+/* Status / data readouts lean monospace — reinforces the instrument-panel feel */
+.task-updater, .keycap, .compact-select, #creditsBadge, #planBadge,
+.audio-level-text, .char-counter, #ragCountLabel, #ragStatsLabel {
+    font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
+}
 
-/* ── 3. BACKGROUND BLOBS — hide the old blue blobs ─────────────────────── */
-.bg-blobs { display: none !important; }
+/* ── 3. GLOBAL SURFACES ─────────────────────────────────────────────── */
+body { background: transparent !important; } /* required: Electron transparent window */
 
-/* ── 4. CONTAINER — dark glass panel ──────────────────────────────────────
-   Background alpha is set high (0.97) so the visible dashboard color is
-   determined almost entirely by this rule, not by whatever sits behind the
-   BrowserWindow. On macOS the window is `transparent: true` with a `sidebar`
-   vibrancy material applied; with the previous 0.82 alpha + saturate(180%)
-   stack, ~18% of the underlying vibrancy/wallpaper bled through and the
-   180% saturation amplified any blue/violet cast. The visible symptom was
-   the MacBook Air's built-in P3 panel rendering a noticeably bluer card
-   than a Mac mini/Studio on an external display, even with appearance
-   forced to dark.
+body::before {
+    /* Faint cool-grain texture, quieter than a color wash */
+    opacity: 0.025 !important;
+    background-image: radial-gradient(circle at 70% 20%, rgba(47,209,199,0.45) 0%, transparent 60%) !important;
+}
 
-   At 0.97 alpha the dashboard reads as the exact same dark navy on every
-   Mac regardless of wallpaper, display panel, or color profile. The faint
-   3% translucency preserves the subtle "the window is a glass card, not a
-   solid rectangle" cue around the rounded edge.
-
-   Transparent-mode is unaffected: `body.transparent-mode .container`
-   (line 506) overrides this rule with `rgba(0,0,0,0.08)` so the see-
-   through Hide-Mode aesthetic still works as before. */
 .container {
-  background: rgba(15,23,42,0.97) !important;
-  border: 1px solid rgba(255,255,255,0.07) !important;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 20px 60px rgba(0,0,0,0.7) !important;
-  backdrop-filter: blur(24px) saturate(110%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(110%) !important;
+    background: var(--ds-black);
 }
 
-/* ── 5. HEADER ───────────────────────────────────────────────────────────── */
-.header {
-  background: rgba(15,23,42,0.75) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+/* Background blobs: one quiet signal halo + monochrome counter-glow.
+   Kept low opacity — the accent stays reserved for interactive/status
+   elements, not decoration. */
+.bg-blobs { opacity: 1 !important; }
+.bg-blobs .blob { opacity: 0.15 !important; }
+.bg-blobs .b1 {
+    background: radial-gradient(circle at 30% 30%, #1c2a2c, #10181a) !important;
 }
-.header-title { color: #FFFFFF !important; }
-#draggableHeader::after {
-  background: linear-gradient(90deg,
-    rgba(255,255,255,0),
-    rgba(99,102,241,0.30),
-    rgba(255,255,255,0)
-  ) !important;
+.bg-blobs .b2 {
+    background: radial-gradient(circle at 60% 40%, rgba(47,209,199,0.5), rgba(21,96,89,0.22)) !important;
 }
 
-/* ── 6. HEADER LOGO — monochrome white (no purple gradient) ─────────────── */
-.header-logo {
-  background: none !important;
-  -webkit-background-clip: unset !important;
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.85) !important;
-  background-clip: unset !important;
-  color: rgba(255, 255, 255, 0.85) !important;
+.content {
+    background: rgba(255,255,255,0.02) !important;
+    border: 1px solid var(--ds-border) !important;
 }
 
-/* ── 7. CHAT MESSAGES background ────────────────────────────────────────── */
-.chat-messages {
-  background: transparent !important;
+/* Windows Normal-Mode forced fills (opaque, non-Hide-Mode surface) */
+body.is-windows:not(.transparent-mode) .container,
+body.is-windows:not(.transparent-mode) .content,
+body.is-windows:not(.transparent-mode) #draggableHeader,
+body.is-windows:not(.transparent-mode) .header,
+body.is-windows:not(.transparent-mode) .controls,
+body.is-windows:not(.transparent-mode) #chatInputContainer {
+    background: var(--ds-surface-0) !important;
+    border-color: var(--ds-border) !important;
 }
 
-/* ── 8. MESSAGE BUBBLES ──────────────────────────────────────────────────── */
-/* AI bubble — dark charcoal (matches Hide-mode aesthetic) */
-.message-content {
-  background: #141b2d !important;
-  color: #dde8ff !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.45) !important;
-}
-/* User bubble — near-black, clearly distinct from the dark-grey AI bubble */
-.message-user .message-content {
-  background: #07090f !important;
-  color: #f0f4ff !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.55) !important;
-}
-.message-user .message-content a { color: #93c5fd !important; }
-.message-user .message-content code {
-  background: rgba(255,255,255,0.10) !important;
-  color: #c7d7ff !important;
-  border: 1px solid rgba(255,255,255,0.15) !important;
-}
-
-/* Inline list bullet accent — softer blue for dark bubbles */
-.message-content ul li::before { color: #7aa2f7 !important; }
-.message-content a { color: #93c5fd !important; }
-.message-content a:hover { color: #bfdbfe !important; }
-
-/* Inline code — readable on both AI and user dark backgrounds */
-.message-content code {
-  background: rgba(255,255,255,0.09) !important;
-  color: #a5c8ff !important;
-  border: 1px solid rgba(255,255,255,0.13) !important;
-}
-/* Heading text inside dark bubbles */
-.message-content h1, .message-content h2, .message-content h3,
-.message-content h4, .message-content h5, .message-content h6 {
-  color: #e8eeff !important;
-}
-
-/* ── 9. CONTROLS BAR ────────────────────────────────────────────────────── */
-.controls {
-  background: rgba(15,23,42,0.78) !important;
-  border-top: 1px solid rgba(255,255,255,0.07) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-}
-.controls::before {
-  background: linear-gradient(90deg,
-    rgba(255,255,255,0),
-    rgba(99,102,241,0.22),
-    rgba(255,255,255,0)
-  ) !important;
-}
-
-/* ── 10. MIC BUTTON — indigo ─────────────────────────────────────────────── */
-.mic-button {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-  border: 1px solid rgba(255,255,255,0.35) !important;
-  box-shadow: 0 6px 20px rgba(99,102,241,0.35) !important;
-}
-.mic-button i { color: #FFFFFF !important; }
-.mic-button:hover {
-  box-shadow: 0 8px 24px rgba(99,102,241,0.45) !important;
-}
-.mic-button.recording {
-  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-  box-shadow: 0 6px 20px rgba(239,68,68,0.45) !important;
-}
-.mic-button.recording i { color: #FFFFFF !important; }
-
-/* ── 11. SMALL ICON BUTTONS (reset, screenshot, send) ───────────────────── */
-.reset-button {
-  background: rgba(255,255,255,0.08) !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-}
-.reset-button:hover { background: rgba(255,255,255,0.15) !important; }
-.reset-button i { color: #FFFFFF !important; }
-
-/* ── 12. TOGGLE SWITCH — compact ─────────────────────────────────────────── */
-.toggle-switch.compact .toggle-label {
-  background: rgba(255,255,255,0.14) !important;
-  border-color: rgba(255,255,255,0.22) !important;
-}
-.toggle-switch.compact .toggle-input:checked + .toggle-label {
-  background: #6366f1 !important;
-  border-color: #4f46e5 !important;
-}
-.toggle-switch.compact .toggle-label:before {
-  background: #FFFFFF !important;
-  border-color: rgba(255,255,255,0.3) !important;
-}
-.toggle-text { color: #a5b4fc !important; }
-
-/* ── 13. MODERN SWITCH (hide mode) ───────────────────────────────────────── */
-.modern-switch .slider {
-  background: rgba(255,255,255,0.12) !important;
-  border-color: rgba(255,255,255,0.20) !important;
-}
-.modern-switch input[type="checkbox"]:checked + .slider {
-  background: linear-gradient(90deg, #6366f1, #8b5cf6) !important;
-  box-shadow: 0 4px 12px rgba(99,102,241,0.35) !important;
-}
-
-/* ── 14. ACTION BUTTONS ──────────────────────────────────────────────────── */
-.action-button.primary {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 2px 8px rgba(99,102,241,0.30) !important;
-}
-.action-button.primary:hover {
-  box-shadow: 0 4px 16px rgba(99,102,241,0.45) !important;
-}
-.action-button.secondary {
-  background: rgba(255,255,255,0.07) !important;
-  color: #E5E7EB !important;
-  border: 1px solid rgba(255,255,255,0.15) !important;
-}
-.action-button.secondary:hover {
-  background: rgba(255,255,255,0.13) !important;
-}
-
-/* ── 15. SETTINGS MODAL — dark glassmorphic ──────────────────────────────── */
-
-/* The outer pane — dark glass card */
-.apikey-modal-content {
-  background: rgba(15, 23, 42, 0.88) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.55) !important;
-  backdrop-filter: blur(20px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
-  color: #e5e7eb !important;
-  border-radius: 16px !important;
-}
-
-/* Force all text inside the modal to light color */
-.apikey-modal-content * { color: #e5e7eb !important; }
-
-/* Top accent stripe — indigo glow */
-.apikey-modal-content::before {
-  background: linear-gradient(90deg, transparent, rgba(99,102,241,0.40), transparent) !important;
-}
-
-/* Header area */
-.settings-header { border-bottom: 1px solid rgba(255,255,255,0.08) !important; }
-.settings-title  { color: #ffffff !important; font-size: 0.92rem !important; font-weight: 700 !important; }
-.settings-subtitle { display: none !important; }
-
-/* Icon wrapper beside title — indigo gradient */
-.settings-brand-logo { filter: none !important; }
-.icon-wrapper {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-  box-shadow: 0 4px 12px rgba(99,102,241,0.30) !important;
-}
-.icon-wrapper i { color: #FFFFFF !important; }
-
-/* Close button */
-.settings-close-btn {
-  background: rgba(255,255,255,0.08) !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  color: #e5e7eb !important;
-}
-.settings-close-btn:hover {
-  background: rgba(239,68,68,0.15) !important;
-  border-color: rgba(239,68,68,0.30) !important;
-  color: #f87171 !important;
-}
-
-/* ── 16. SETTINGS TABS — indigo active state ─────────────────────────────── */
-
-/* Tab row */
-.settings-tabs,
-.tab-buttons {
-  background: rgba(255,255,255,0.04) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-  gap: 0 !important;
-  padding: 0 !important;
-}
-
-/* Individual tab button */
-.tab-button {
-  font-size: 0.72rem !important;
-  font-weight: 500 !important;
-  padding: 0.48rem 0.75rem !important;
-  color: rgba(255,255,255,0.45) !important;
-  background: transparent !important;
-  border: none !important;
-  border-bottom: 2px solid transparent !important;
-  border-radius: 0 !important;
-  letter-spacing: 0 !important;
-  min-width: unset !important;
-  box-shadow: none !important;
-  transition: color 0.15s, border-color 0.15s !important;
-}
-.tab-button:hover {
-  color: rgba(255,255,255,0.80) !important;
-  background: rgba(255,255,255,0.05) !important;
-  border-bottom-color: rgba(99,102,241,0.40) !important;
-  transform: none !important;
-  box-shadow: none !important;
-}
-.tab-button.active {
-  color: #ffffff !important;
-  background: transparent !important;
-  border-bottom-color: #6366f1 !important;
-  border-bottom-width: 2px !important;
-  font-weight: 700 !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-.tab-button i { opacity: 0.80 !important; }
-.tab-button.active i { opacity: 1 !important; color: #a5b4fc !important; }
-
-/* ── 17. SECTION PILLS inside settings ───────────────────────────────────── */
-.stg-section-pill {
-  color: #a5b4fc !important;
-  background: rgba(99,102,241,0.10) !important;
-  border: 1px solid rgba(99,102,241,0.22) !important;
-}
-.stg-section-pill i { color: #a5b4fc !important; }
-
-/* ── 18. FORM ELEMENTS ───────────────────────────────────────────────────── */
-.form-label,
-.setting-label { color: #e5e7eb !important; }
-.form-description,
-.setting-desc  { color: rgba(255,255,255,0.45) !important; }
-.apikey-modal-content select {
-  background: rgba(255,255,255,0.08) !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  color: #f1f5f9 !important;
-  border-radius: 8px !important;
-}
-.apikey-modal-content textarea,
-.apikey-modal-content input[type="text"],
-.apikey-modal-content input[type="password"] {
-  background: rgba(255,255,255,0.07) !important;
-  border-color: rgba(255,255,255,0.14) !important;
-  color: #f1f5f9 !important;
-}
-.apikey-modal-content textarea:focus,
-.apikey-modal-content input:focus {
-  border-color: #6366f1 !important;
-  box-shadow: 0 0 0 2px rgba(99,102,241,0.22) !important;
-  outline: none !important;
-}
-
-/* ── 19. ACTION BUTTONS inside settings ──────────────────────────────────── */
-.apikey-modal-content button {
-  background: rgba(99,102,241,0.15) !important;
-  color: #a5b4fc !important;
-  box-shadow: none !important;
-  border: 1px solid rgba(99,102,241,0.28) !important;
-}
-.apikey-modal-content button:hover {
-  background: rgba(99,102,241,0.25) !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-/* Primary (save) buttons */
-.apikey-modal-content .action-button.primary,
-.apikey-modal-content button.save {
-  background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
-  color: #ffffff !important;
-  border: none !important;
-  box-shadow: 0 2px 8px rgba(99,102,241,0.30) !important;
-}
-.apikey-modal-content .action-button.primary:hover,
-.apikey-modal-content button.save:hover {
-  background: linear-gradient(135deg, #818cf8, #6366f1) !important;
-  box-shadow: 0 4px 14px rgba(99,102,241,0.42) !important;
-  transform: none !important;
-}
-/* Destructive (cancel/logout) */
-.apikey-modal-content button.cancel,
-.apikey-modal-content button[data-action="cancel"] {
-  background: rgba(239,68,68,0.10) !important;
-  color: #f87171 !important;
-  border: 1px solid rgba(239,68,68,0.25) !important;
-}
-.apikey-modal-content button.cancel:hover,
-.apikey-modal-content button[data-action="cancel"]:hover {
-  background: rgba(239,68,68,0.18) !important;
-}
-
-/* ── 20. RADIO / CHECKBOX accents ────────────────────────────────────────── */
-.apikey-modal-content input[type="radio"]    { accent-color: #6366f1 !important; }
-.apikey-modal-content input[type="checkbox"] { accent-color: #6366f1 !important; }
-
-/* ── 21. SETTINGS ROWS & SECTIONS ───────────────────────────────────────── */
-.settings-row { border-bottom: 1px solid rgba(255,255,255,0.06) !important; }
-.settings-section { border: 1px solid rgba(255,255,255,0.08) !important; background: rgba(255,255,255,0.03) !important; }
-
-/* MODAL CONTENT alias (hide/unhide confirmation, chat history, profile modal) */
-.modal-content {
-  background: rgba(15,23,42,0.92) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.55) !important;
-  color: #e5e7eb !important;
-  backdrop-filter: blur(20px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
-  border-radius: 16px !important;
-}
-.modal-content::before {
-  background: linear-gradient(90deg, transparent, rgba(99,102,241,0.30), transparent) !important;
-}
-.modal-header h3 { color: #ffffff !important; }
-.modal-header .subtitle { color: rgba(255,255,255,0.55) !important; font-size: 0.72rem !important; }
-.modal-header { border-bottom: 1px solid rgba(255,255,255,0.08) !important; padding-bottom: 0.6rem !important; }
-.modal-header .icon-wrapper {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-  box-shadow: 0 4px 12px rgba(99,102,241,0.30) !important;
-}
-.modal-header .icon-wrapper i { color: #FFFFFF !important; }
-
-/* Profile tabs */
-.profile-tabs { background: rgba(255,255,255,0.06) !important; border-radius: 6px !important; }
-.profile-tab { color: rgba(255,255,255,0.55) !important; font-size: 0.72rem !important; font-weight: 500 !important; }
-.profile-tab.active {
-  background: rgba(99,102,241,0.88) !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.20) !important;
-}
-
-/* ── 18. SIGN-IN / WELCOME SCREENS ──────────────────────────────────────── */
-.sign-in-screen, .welcome-screen {
-  background: #111111 !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.75) !important;
+/* ── 4. SIGN-IN / WELCOME SCREENS ───────────────────────────────────── */
+.welcome-screen {
+    background: var(--ds-black) !important;
+    border: 1px solid var(--ds-border) !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7) !important;
 }
 .product-name {
-  background: linear-gradient(90deg, #6366f1, #a5b4fc) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
+    font-family: "Space Grotesk", sans-serif !important;
+    background: linear-gradient(90deg, var(--ds-signal-dim), var(--ds-signal), #7EEDE5) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
 }
+.product-description { color: rgba(241,242,246,0.68) !important; }
 .sign-in-btn, .start-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  box-shadow: 0 4px 16px rgba(99,102,241,0.35) !important;
+    background: var(--ds-signal) !important;
+    color: var(--ds-signal-ink) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 10px 26px rgba(47,209,199,0.28) !important;
 }
 .sign-in-btn:hover, .start-btn:hover {
-  box-shadow: 0 6px 20px rgba(99,102,241,0.50) !important;
+    background: #7EEDE5 !important;
+    box-shadow: 0 14px 32px rgba(47,209,199,0.4) !important;
+}
+.product-footer {
+    background: rgba(47,209,199,0.06) !important;
+    border-top: 1px solid var(--ds-border) !important;
+    color: rgba(241,242,246,0.7) !important;
+}
+.product-footer a { color: var(--ds-signal) !important; }
+.product-footer a:hover { color: #7EEDE5 !important; }
+
+/* ── 5. HEADER / DRAG BAR ───────────────────────────────────────────── */
+#draggableHeader {
+    background: rgba(18,19,25,0.88) !important;
+    border-bottom: 1px solid var(--ds-border) !important;
+}
+#draggableHeader::after,
+.controls::before {
+    background: linear-gradient(90deg, transparent, rgba(47,209,199,0.55), transparent) !important;
+}
+.header-logo { color: rgba(241,242,246,0.9) !important; }
+#hideModeHint {
+    background: linear-gradient(135deg, rgba(47,209,199,0.16), rgba(47,209,199,0.06)) !important;
+    border: 1px solid rgba(47,209,199,0.30) !important;
+    color: rgba(241,242,246,0.92) !important;
+    box-shadow: 0 4px 14px rgba(47,209,199,0.14) !important;
+}
+#hideModeHint .hmh-kbd {
+    background: rgba(18,19,25,0.6) !important;
+    border-color: rgba(47,209,199,0.4) !important;
+    color: var(--ds-signal) !important;
+}
+#hideModeHint .hmh-icon { color: var(--ds-signal) !important; }
+.header {
+    background: rgba(18,19,25,0.5) !important;
+    border-bottom: 1px solid var(--ds-border) !important;
 }
 
-/* ── 19. LOADING DOTS — indigo ────────────────────────────────────────────── */
-.loading-dot { background-color: #6366f1 !important; }
+/* ── 6. CHAT AREA ───────────────────────────────────────────────────── */
+.chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14) !important; }
+.chat-messages::-webkit-scrollbar-thumb:hover { background: rgba(47,209,199,0.35) !important; }
 
-/* ── 20. CODE COPY BUTTON ─────────────────────────────────────────────────── */
-.copy-button {
-  background: rgba(255,255,255,0.90) !important;
-  color: #111827 !important;
-  border: 1px solid rgba(0,0,0,0.08) !important;
+.message-content {
+    background: var(--ds-ai-bubble) !important;
+    color: #E6E7EC !important;
+    border: 1px solid var(--ds-border) !important;
 }
-.copy-button:hover {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(99,102,241,0.35) !important;
+.message-user .message-content {
+    background: var(--ds-user-bubble) !important;
+    color: var(--ds-white) !important;
+    border: 1px solid rgba(255,255,255,0.14) !important;
+    border-left: 3px solid var(--ds-signal) !important;
 }
-.copy-button.copied {
-  background: #22c55e !important;
-  color: #FFFFFF !important;
-  border-color: #22c55e !important;
+.message-ai-right .message-content,
+.message-ai .message-content {
+    background: var(--ds-ai-bubble) !important;
+    color: #E6E7EC !important;
 }
+.message-content a { color: var(--ds-signal) !important; border-bottom-color: rgba(47,209,199,0.35) !important; }
+.message-content a:hover { color: #7EEDE5 !important; background: rgba(47,209,199,0.08) !important; }
+.message-content code { background: rgba(255,255,255,0.08) !important; color: var(--ds-signal) !important; border-color: rgba(255,255,255,0.14) !important; }
+pre { background: linear-gradient(135deg, #242732 0%, #15171D 100%) !important; border-color: rgba(255,255,255,0.12) !important; }
+.message-ai .message-content strong, .message-ai .message-content b { color: var(--ds-white) !important; }
+.message-content ul li::before { color: var(--ds-signal) !important; }
+.copy-button { background: linear-gradient(135deg, #2C303D, #1E212A) !important; color: #E6E7EC !important; border-color: var(--ds-border) !important; }
+.copy-button:hover { background: linear-gradient(135deg, var(--ds-signal), var(--ds-signal-dim)) !important; color: var(--ds-signal-ink) !important; }
+.copy-button.copied { background: linear-gradient(135deg, var(--ds-success), #58B23C) !important; color: #0B1F06 !important; border-color: transparent !important; }
 
-/* ── 21. LIVE TRANSCRIPT PILL ─────────────────────────────────────────────── */
-.live-transcript.listening .status-dot { background: #ef4444 !important; }
-.live-transcript.processing .status-dot { background: #6366f1 !important; }
-
-/* ── 22. SCREENSHOT BTN ──────────────────────────────────────────────────── */
-.screenshot-btn {
-  background: rgba(255,255,255,0.08) !important;
-  border-color: rgba(255,255,255,0.15) !important;
-  color: #FFFFFF !important;
+/* Action chips (follow-up suggestions) */
+.action-tag, .suggestion-chip {
+    background: var(--ds-surface-2) !important;
+    border-color: var(--ds-border) !important;
+    color: var(--ds-white-dim) !important;
 }
-.screenshot-btn:hover { background: rgba(255,255,255,0.16) !important; }
-
-/* ── 23. CONTENT area (chat) ─────────────────────────────────────────────── */
-.content {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+.action-tag:hover, .suggestion-chip:hover {
+    background: var(--ds-surface-3) !important;
+    border-color: rgba(47,209,199,0.4) !important;
+    color: var(--ds-white) !important;
 }
+.action-tag i, .suggestion-chip i { color: var(--ds-signal) !important; }
+.action-tag:hover i, .action-tag:hover span,
+.suggestion-chip:hover i, .suggestion-chip:hover span { color: var(--ds-white) !important; }
+.action-tag[data-tip]::after { background: rgba(18,19,25,0.97) !important; border-color: rgba(47,209,199,0.25) !important; }
 
-/* ── 24. SCROLLBAR — subtle indigo tint ─────────────────────────────────── */
-.chat-messages::-webkit-scrollbar-thumb {
-  background: rgba(99,102,241,0.22) !important;
+/* ── 7. TASK UPDATER (status pill) — signature signal-ring dot ───────── */
+.task-updater {
+    background: rgba(18,19,25,0.7) !important;
+    border: 1px solid var(--ds-border) !important;
+    color: var(--ds-white-dim) !important;
 }
-.chat-messages::-webkit-scrollbar-thumb:hover {
-  background: rgba(99,102,241,0.38) !important;
+.task-updater[data-state^="idle"]                  { color: var(--ds-white-faint) !important; }
+.task-updater[data-state="waiting-audio"]          { color: var(--ds-info) !important; }
+.task-updater[data-state="listening-manual"]       { color: var(--ds-signal) !important; }
+.task-updater[data-state="auto-active"]            { color: var(--ds-signal) !important; }
+.task-updater[data-state="auto-fallback"]          { color: var(--ds-white-dim) !important; }
+.task-updater[data-state="screenshot-processing"]  { color: var(--ds-signal) !important; }
+.task-updater[data-state="auto-stopped"]           { color: var(--ds-success) !important; }
+.task-updater[data-state="error"]                  { color: var(--ds-danger) !important; }
+.task-updater[data-state="auto-question-detected"] { color: var(--ds-success) !important; }
+.task-updater[data-state="auto-silence-countdown"] { color: var(--ds-white-dim) !important; }
+
+/* signature ring — replaces the flat glow-dot with a small pulsing halo */
+.hide-active-dot {
+    background: var(--ds-signal) !important;
+    box-shadow: 0 0 0 0 rgba(47,209,199,0.6) !important;
+    animation: signalRing 2.2s ease-out infinite !important;
 }
-
-/* ══════════════════════════════════════════════════════════════════════════
-   25. HIDE MODE — TRUE CLEAR SEE-THROUGH
-   Goal: user can read VS Code / any app behind Angel with NO blur distortion.
-   Strategy:
-     • Container background → near-zero alpha (just a faint tint so elements
-       have a surface to sit on).
-     • backdrop-filter → removed entirely; OS compositing shows content as-is.
-     • Chrome bars (header/controls) → semi-transparent dark tint only.
-     • Message bubbles → opaque enough to read, but compact.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* Body becomes OS-transparent (Electron sets vibrancy/transparent BG in main.js) */
-body.transparent-mode {
-  background: transparent !important;
-}
-
-/* ── Container: clear film, NO blur ──────────────────────────────────────── */
-body.transparent-mode .container {
-  background: rgba(0, 0, 0, 0.08) !important;   /* almost invisible tint    */
-  backdrop-filter: none !important;              /* no blur — crystal clear   */
-  -webkit-backdrop-filter: none !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-  box-shadow: none !important;
-}
-
-/* ── All inner panels: fully see-through ─────────────────────────────────── */
-body.transparent-mode .content,
-body.transparent-mode .chat-messages,
-body.transparent-mode .sign-in-screen,
-body.transparent-mode .welcome-screen {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+@keyframes signalRing {
+    0%   { box-shadow: 0 0 0 0 rgba(47,209,199,0.55); }
+    70%  { box-shadow: 0 0 0 8px rgba(47,209,199,0); }
+    100% { box-shadow: 0 0 0 0 rgba(47,209,199,0); }
 }
 
-/* ── Chrome bars: minimal dark strip so controls remain legible ──────────── */
-body.transparent-mode .header {
-  background: rgba(0,0,0,0.55) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.10) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+/* Live listening pill dot */
+.live-transcript.listening .status-dot { background: var(--ds-danger) !important; }
+.live-transcript.processing .status-dot { background: var(--ds-info) !important; }
+
+/* ── 8. CONTROLS BAR ────────────────────────────────────────────────── */
+.controls { background: rgba(18,19,25,0.55) !important; border-top: 1px solid var(--ds-border) !important; }
+.gear-icon {
+    background: var(--ds-surface-2) !important;
+    border: 1px solid var(--ds-border) !important;
+    color: var(--ds-white) !important;
 }
-body.transparent-mode .controls {
-  background: rgba(0,0,0,0.55) !important;
-  border-top: 1px solid rgba(255,255,255,0.10) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+.gear-icon:hover { background: var(--ds-surface-3) !important; border-color: rgba(47,209,199,0.35) !important; }
+
+/* mic button carries the signature ring while recording */
+.mic-button {
+    background: var(--ds-surface-2) !important;
+    border: 1px solid var(--ds-border) !important;
+    color: var(--ds-white) !important;
 }
-body.transparent-mode #chatInputContainer {
-  background: rgba(0,0,0,0.55) !important;
-  border-top: 1px solid rgba(255,255,255,0.10) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+.mic-button:hover { border-color: rgba(47,209,199,0.4) !important; }
+.mic-button.recording {
+    background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important;
+    color: var(--ds-signal-ink) !important;
+    box-shadow: 0 0 0 0 rgba(47,209,199,0.55) !important;
+    animation: signalRing 1.8s ease-out infinite !important;
 }
 
-/* ── Message bubbles: opaque so text is readable over any desktop ──────────── */
+/* ── 9. CHAT INPUT ───────────────────────────────────────────────────── */
+#chatInputContainer {
+    background: rgba(18,19,25,0.6) !important;
+    border-top: 1px solid var(--ds-border) !important;
+}
+#chatInput {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid var(--ds-border) !important;
+    color: var(--ds-white) !important;
+}
+#chatInput::placeholder { color: var(--ds-white-faint) !important; }
+#chatInput:focus { border-color: rgba(47,209,199,0.5) !important; box-shadow: 0 0 0 3px rgba(47,209,199,0.14) !important; }
+#sendButton { background: var(--ds-signal) !important; color: var(--ds-signal-ink) !important; }
+#sendButton:hover { background: #7EEDE5 !important; }
+
+/* ── 10. GENERIC MODALS ─────────────────────────────────────────────── */
+.modal-content {
+    background: linear-gradient(160deg, rgba(24,26,33,0.98), rgba(16,17,22,0.98)) !important;
+    border: 1px solid var(--ds-border) !important;
+    color: var(--ds-white) !important;
+}
+.modal-content::before { background: linear-gradient(90deg, transparent, rgba(47,209,199,0.4), transparent) !important; }
+.modal-header { border-bottom-color: var(--ds-border) !important; }
+.modal-header h3 { color: var(--ds-white) !important; }
+.modal-header .subtitle { color: var(--ds-white-dim) !important; }
+.modal-header .icon-wrapper { background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important; box-shadow: 0 4px 10px rgba(47,209,199,0.28) !important; }
+.modal-header .icon-wrapper i { color: var(--ds-signal-ink) !important; }
+
+.action-button.primary {
+    background: var(--ds-signal) !important;
+    color: var(--ds-signal-ink) !important;
+    box-shadow: 0 4px 12px rgba(47,209,199,0.28) !important;
+}
+.action-button.primary:hover { background: #7EEDE5 !important; }
+.action-button.secondary {
+    background: rgba(255,255,255,0.06) !important;
+    color: var(--ds-white-dim) !important;
+    border: 1px solid var(--ds-border) !important;
+}
+.action-button.secondary:hover { background: rgba(255,255,255,0.1) !important; color: var(--ds-white) !important; }
+
+/* Access-denied / out-of-credits card */
+.access-denied-overlay { background: rgba(18,19,25,0.88) !important; }
+.access-denied-card {
+    background: rgba(24,26,33,0.9) !important;
+    border: 1px solid rgba(47,209,199,0.28) !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 24px rgba(47,209,199,0.14) !important;
+}
+.upgrade-btn { background: var(--ds-signal) !important; color: var(--ds-signal-ink) !important; }
+.upgrade-btn:hover { background: #7EEDE5 !important; box-shadow: 0 4px 12px rgba(47,209,199,0.4) !important; }
+.access-denied-secondary-btn.logout-btn { border-color: rgba(255,107,94,0.5) !important; color: #FFB8B0 !important; }
+
+/* Hide-confirm / Unhide-confirm modal accents */
+#hideConfirmModal .icon-wrapper, #unhideConfirmModal .icon-wrapper { background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important; }
+#hideConfirmModal i.fa-shield-halved, #hideConfirmModal strong { color: var(--ds-signal) !important; }
+
+/* ── 11. SETTINGS MODAL ─────────────────────────────────────────────── */
+.apikey-modal { background: rgba(0,0,0,0.55) !important; }
+.apikey-modal-content {
+    background: linear-gradient(160deg, rgba(22,24,30,0.98), rgba(14,15,19,0.98)) !important;
+    border: 1px solid var(--ds-border) !important;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.65) !important;
+}
+.apikey-modal-content::before { background: linear-gradient(90deg, transparent, rgba(47,209,199,0.4), transparent) !important; }
+.apikey-modal-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.16) !important; }
+.apikey-modal-content::-webkit-scrollbar-thumb:hover { background: rgba(47,209,199,0.35) !important; }
+
+.settings-header { border-bottom-color: var(--ds-border) !important; }
+.settings-brand-logo { background: rgba(47,209,199,0.14) !important; border-color: rgba(47,209,199,0.28) !important; }
+.settings-brand-logo svg { color: var(--ds-signal) !important; }
+.settings-title h3 { color: var(--ds-white) !important; }
+.settings-subtitle { color: var(--ds-white-faint) !important; }
+.settings-close-btn { background: rgba(255,255,255,0.06) !important; border-color: var(--ds-border) !important; color: var(--ds-white-dim) !important; }
+.settings-close-btn:hover { background: rgba(255,107,94,0.18) !important; color: #FFEDEB !important; border-color: rgba(255,107,94,0.4) !important; }
+
+.credits-badge { color: var(--ds-signal) !important; background: rgba(47,209,199,0.12) !important; border-color: rgba(47,209,199,0.3) !important; }
+.plan-badge { color: var(--ds-white-dim) !important; background: rgba(255,255,255,0.06) !important; border-color: var(--ds-border) !important; }
+.plan-badge.is-paid { color: var(--ds-success) !important; background: var(--ds-success-dim) !important; border-color: rgba(126,217,87,0.32) !important; }
+
+.stg-section-pill { background: rgba(255,255,255,0.05) !important; color: var(--ds-white-faint) !important; }
+.settings-row { border-bottom-color: rgba(255,255,255,0.05) !important; }
+.setting-label { color: var(--ds-white) !important; }
+.setting-desc { color: var(--ds-white-faint) !important; }
+.setting-badge-new { background: linear-gradient(135deg, var(--ds-success), #58B23C) !important; }
+.setting-badge-hot { background: linear-gradient(135deg, var(--ds-signal), var(--ds-signal-dim)) !important; }
+.info-tip::after { background: rgba(18,19,25,0.97) !important; border-color: rgba(47,209,199,0.28) !important; }
+
+.settings-tabs { border-bottom-color: var(--ds-border) !important; }
+.tab-button { color: var(--ds-white-faint) !important; }
+.tab-button:hover { color: var(--ds-white) !important; border-bottom-color: rgba(255,255,255,0.2) !important; }
+.tab-button.active { color: var(--ds-white) !important; border-bottom-color: var(--ds-signal) !important; }
+
+.compact-select {
+    background: rgba(255,255,255,0.06) !important;
+    border-color: var(--ds-border) !important;
+    color: var(--ds-white) !important;
+}
+.compact-select:hover { background: rgba(255,255,255,0.1) !important; border-color: var(--ds-border-strong) !important; }
+.safe-dd-menu { background: var(--ds-surface-2) !important; border-color: var(--ds-border-strong) !important; }
+.safe-dd-option:hover { background: rgba(47,209,199,0.18) !important; color: var(--ds-white) !important; }
+.safe-dd-option.is-selected { background: rgba(47,209,199,0.26) !important; color: var(--ds-white) !important; }
+.safe-dd-group { color: var(--ds-white-faint) !important; }
+
+.keycap { background: rgba(255,255,255,0.08) !important; border-color: var(--ds-border-strong) !important; color: #ECEDF1 !important; }
+#shortcutsTab .shortcut-item { background: rgba(255,255,255,0.035) !important; }
+#shortcutOsMac, #shortcutOsWin, #shortcutTabNormal, #shortcutTabUniversal { color: var(--ds-white-faint) !important; }
+
+.proactive-fullauto-notice { background: rgba(47,209,199,0.08) !important; border-color: rgba(47,209,199,0.24) !important; color: #C9EDE9 !important; }
+.proactive-fullauto-notice i { color: var(--ds-signal) !important; }
+.proactive-fullauto-notice strong { color: var(--ds-white) !important; }
+
+/* API Keys tab */
+#apikeysTab .api-key-input { background: #101218 !important; border-color: #2C303D !important; color: var(--ds-white) !important; }
+#apikeysTab .api-key-input:focus { border-color: var(--ds-signal) !important; box-shadow: 0 0 0 3px rgba(47,209,199,0.2) !important; }
+#apikeysTab .api-key-section label i { color: var(--ds-signal) !important; }
+#apikeysTab .api-key-test-btn { background: var(--ds-surface-2) !important; border-color: #2C303D !important; color: #E6E7EC !important; }
+#apikeysTab .api-key-test-btn:hover:not([disabled]) { background: var(--ds-surface-3) !important; }
+#apikeysTab .api-key-spinner { border-top-color: var(--ds-signal) !important; }
+#apikeysTab .api-key-error { color: var(--ds-danger) !important; }
+#apikeysTab .api-key-error.is-success { color: var(--ds-success) !important; }
+.api-key-status .text-success { color: var(--ds-success) !important; }
+.api-key-status .text-error { color: var(--ds-danger) !important; }
+.api-key-status .text-testing { color: var(--ds-signal) !important; }
+
+/* Instant Help tab */
+#helpTab .ih-card { background: linear-gradient(145deg, rgba(36,39,50,0.6), rgba(20,22,28,0.6)) !important; border-color: var(--ds-border) !important; }
+#helpTab .ih-card:hover { border-color: rgba(47,209,199,0.35) !important; }
+#helpTab .ih-value:hover { color: var(--ds-signal) !important; }
+#helpTab .ih-copy { background: rgba(47,209,199,0.12) !important; border-color: rgba(47,209,199,0.28) !important; color: var(--ds-signal) !important; }
+#helpTab .ih-copy:hover { background: rgba(47,209,199,0.22) !important; }
+#helpTab .ih-copy.copied { background: var(--ds-success-dim) !important; border-color: rgba(126,217,87,0.5) !important; color: var(--ds-success) !important; }
+
+/* ── 12. PROFILE MODAL ──────────────────────────────────────────────── */
+#profileInputModal { background-color: rgba(0,0,0,0.6) !important; }
+#profileInputModal .profile-modal-shell {
+    background: linear-gradient(160deg, rgba(22,24,30,0.98), rgba(14,15,19,0.98)) !important;
+    border: 1px solid var(--ds-border) !important;
+}
+#profileInputModal .profile-modal-shell::before { background: linear-gradient(90deg, transparent, rgba(47,209,199,0.45), transparent) !important; }
+#profileInputModal .profile-modal-topbar { border-bottom-color: var(--ds-border) !important; }
+#profileInputModal .profile-modal-title { color: var(--ds-white) !important; }
+#profileInputModal .profile-icon-btn { background: rgba(255,255,255,0.05) !important; border-color: var(--ds-border) !important; color: var(--ds-white-dim) !important; }
+#profileInputModal .profile-icon-btn:hover { background: rgba(47,209,199,0.16) !important; border-color: rgba(47,209,199,0.4) !important; color: var(--ds-white) !important; }
+#profileInputModal .profile-icon-btn--danger { background: rgba(255,107,94,0.14) !important; border-color: rgba(255,107,94,0.32) !important; color: #FFB8B0 !important; }
+#profileInputModal .profile-icon-btn--danger:hover { background: rgba(255,107,94,0.28) !important; }
+
+#profileInputModal .mode-selector-row { border-bottom-color: rgba(255,255,255,0.06) !important; }
+#profileInputModal .mode-selector-label { color: var(--ds-white-dim) !important; }
+#profileInputModal .mode-selector-label i { color: var(--ds-signal) !important; }
+#profileInputModal .mode-dropdown-select { background: rgba(255,255,255,0.05) !important; border-color: var(--ds-border) !important; color: var(--ds-white) !important; }
+#profileInputModal .mode-dropdown-select:focus { border-color: rgba(47,209,199,0.6) !important; box-shadow: 0 0 0 3px rgba(47,209,199,0.2) !important; }
+
+#profileInputModal .profile-tabs { background: rgba(18,19,25,0.7) !important; border-color: var(--ds-border) !important; }
+#profileInputModal .profile-tab { color: var(--ds-white-faint) !important; }
+#profileInputModal .profile-tab:hover { color: var(--ds-white) !important; }
+#profileInputModal .profile-tab.active {
+    background: linear-gradient(135deg, rgba(47,209,199,0.22), rgba(47,209,199,0.08)) !important;
+    color: var(--ds-white) !important;
+    border: 1px solid rgba(47,209,199,0.45) !important;
+    box-shadow: 0 4px 14px rgba(47,209,199,0.18) !important;
+}
+
+#profileInputModal .form-label { color: var(--ds-white-dim) !important; }
+#profileInputModal .form-label .required { color: var(--ds-danger) !important; }
+#profileInputModal .form-description { color: var(--ds-white-faint) !important; }
+#profileInputModal .modal-content textarea, #profileInputModal textarea,
+#profileInputModal input[type="text"], #profileInputModal input[type="email"],
+#profileInputModal input[type="url"] {
+    background: rgba(255,255,255,0.04) !important;
+    border-color: var(--ds-border) !important;
+    color: var(--ds-white) !important;
+}
+#profileInputModal textarea:focus, #profileInputModal input:focus {
+    border-color: rgba(47,209,199,0.6) !important;
+    box-shadow: 0 0 0 3px rgba(47,209,199,0.2) !important;
+}
+#profileInputModal .char-counter .hint { color: var(--ds-white-faint) !important; }
+#profileInputModal .char-counter .count { color: var(--ds-white-dim) !important; }
+
+#profileInputModal .profile-modal-footer { border-top-color: var(--ds-border) !important; }
+#profileInputModal .profile-save-btn {
+    background: var(--ds-signal) !important;
+    border-color: rgba(47,209,199,0.5) !important;
+    color: var(--ds-signal-ink) !important;
+    box-shadow: 0 6px 18px rgba(47,209,199,0.32) !important;
+}
+#profileInputModal .profile-save-btn:hover { background: #7EEDE5 !important; }
+#profileInputModal .save-for-later-label { color: var(--ds-white-faint) !important; }
+#profileInputModal .save-for-later-label:hover { background: rgba(47,209,199,0.1) !important; color: var(--ds-white-dim) !important; }
+#profileInputModal .sfl-box { background: rgba(47,209,199,0.14) !important; border-color: rgba(47,209,199,0.32) !important; }
+#profileInputModal .sfl-box i { color: var(--ds-signal) !important; }
+#profileInputModal .save-for-later-label:has(input:checked) { background: rgba(47,209,199,0.16) !important; color: var(--ds-white) !important; }
+
+/* RAG / Knowledge base rows share the .action-button classes above; add
+   the file-list rows here for consistency (targeted by JS-inserted markup,
+   selectors below match the inline style used when building each <li>). */
+#ragFilesList li { background: rgba(255,255,255,0.03) !important; border-color: var(--ds-border) !important; }
+
+/* ── 13. AUDIO LEVEL / PERMISSIONS ──────────────────────────────────── */
+.audio-level-meter { background: linear-gradient(145deg, rgba(36,39,50,0.6), rgba(18,19,25,0.6)) !important; border-color: rgba(47,209,199,0.22) !important; }
+.audio-level-bar { background: rgba(18,19,25,0.7) !important; border-color: rgba(47,209,199,0.16) !important; }
+.audio-level-fill { background: linear-gradient(90deg, var(--ds-signal-dim), var(--ds-signal), #7EEDE5) !important; box-shadow: 0 0 10px rgba(47,209,199,0.5) !important; }
+#audioLevelValue { color: var(--ds-white) !important; }
+
+.permission-icon { background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important; color: var(--ds-signal-ink) !important; }
+.permission-icon.microphone { background: linear-gradient(135deg, #2E5E7A, var(--ds-info)) !important; }
+.permission-icon.screen { background: linear-gradient(135deg, #4C9E3E, var(--ds-success)) !important; }
+.status-indicator.checking { background: rgba(47,209,199,0.18) !important; color: var(--ds-signal) !important; }
+.status-indicator.granted { background: var(--ds-success-dim) !important; color: var(--ds-success) !important; }
+.status-indicator.denied { background: var(--ds-danger-dim) !important; color: var(--ds-danger) !important; }
+.action-button.primary.modern { background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important; color: var(--ds-signal-ink) !important; box-shadow: 0 2px 4px rgba(47,209,199,0.35) !important; }
+.action-button.primary.modern:hover { background: linear-gradient(135deg, var(--ds-signal), #7EEDE5) !important; }
+
+/* ── 14. CHAT HISTORY MODAL ─────────────────────────────────────────── */
+.history-message.user .history-message-content { background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important; color: var(--ds-signal-ink) !important; }
+.history-message-item { background: rgba(255,255,255,0.04) !important; border-left-color: var(--ds-signal) !important; }
+.history-mode-tag.interview { background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important; }
+.history-mode-tag.meeting { background: linear-gradient(135deg, var(--ds-success), #58B23C) !important; }
+.history-mode-tag.chatgpt { background: linear-gradient(135deg, var(--ds-danger), #E0503F) !important; }
+
+/* ── 15. DYNAMIC (JS-CREATED) TOASTS & OVERLAYS ─────────────────────── */
+/* These nodes carry inline style="" from JS; a stylesheet rule with
+   !important still wins over a non-!important inline declaration, so we
+   can re-skin them without touching the JS that builds them. */
+#_angelCreditsAddedCard {
+    background: linear-gradient(135deg, rgba(18,24,22,0.94), rgba(18,19,25,0.94)) !important;
+    border-color: rgba(47,209,199,0.45) !important;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 28px rgba(47,209,199,0.22) !important;
+}
+#_angelCreditsAddedCard [style*="linear-gradient(135deg,#6366f1,#8b5cf6)"],
+#_angelCreditsAddedCard div:first-child {
+    background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important;
+    box-shadow: 0 6px 16px rgba(47,209,199,0.45) !important;
+}
+#_ghostTypingToast, #_planGateToast, #_hideModeToast, #_angelGenericToast {
+    background: rgba(22,24,30,0.94) !important;
+    border-color: rgba(255,255,255,0.14) !important;
+}
+#ragErrorModal > div, #ragIndexingModal > div, #customPromptModal > div {
+    background: rgba(22,24,30,0.97) !important;
+    border-color: var(--ds-border-strong) !important;
+}
+#ragModalBar { background: linear-gradient(90deg, var(--ds-signal-dim), var(--ds-signal)) !important; }
+#ragErrorOk, #_gtEnableBtn {
+    background: linear-gradient(90deg, var(--ds-signal-dim), var(--ds-signal)) !important;
+    color: var(--ds-signal-ink) !important;
+}
+#_toastHide { background: var(--ds-signal-dim) !important; color: var(--ds-signal-ink) !important; }
+
+/* ── 16. HIDE MODE (transparent-mode) — recolor only ────────────────── */
+/* Functional rules (backdrop-filter:none, near-zero alpha) are left
+   completely untouched below; only accent colors are re-themed so the
+   overlay stays consistent with the app even while screen-sharing. */
+
+/* Text color: black when hide mode is OFF, white when hide mode is ON */
+.message-content {
+    color: #000000 !important;
+}
 body.transparent-mode .message-content {
-  background: rgba(15,15,15,0.88) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.50) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+    color: #ffffff !important;
 }
+
+/* Chat input text color: black when hide mode is OFF, white when hide mode is ON */
+#chatInput {
+    color: #000000 !important;
+}
+#chatInput::placeholder {
+    color: #666666 !important;
+}
+body.transparent-mode #chatInput {
+    color: #ffffff !important;
+}
+body.transparent-mode #chatInput::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
 body.transparent-mode .message-user .message-content {
-  background: rgba(79,70,229,0.90) !important;
-  color: #FFFFFF !important;
-  border-color: rgba(99,102,241,0.45) !important;
-  box-shadow: 0 2px 10px rgba(79,70,229,0.40) !important;
+    border-left-color: rgba(47,209,199,0.7) !important;
 }
-
-/* ── Interactive elements ─────────────────────────────────────────────────── */
-body.transparent-mode .gear-icon {
-  background: rgba(255,255,255,0.14) !important;
-  border: 1px solid rgba(255,255,255,0.24) !important;
+body.transparent-mode .quick-actions .action-tag:hover,
+body.transparent-mode .suggestion-chip:hover {
+    background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important;
+    border-color: rgba(47,209,199,0.9) !important;
+    color: var(--ds-signal-ink) !important;
 }
-body.transparent-mode .reset-button {
-  background: rgba(255,255,255,0.14) !important;
-  border: 1px solid rgba(255,255,255,0.24) !important;
-}
-body.transparent-mode .reset-button i,
-body.transparent-mode .controls i,
-body.transparent-mode #sendButton i,
-body.transparent-mode #toggleInputModeButton i { color: #FFFFFF !important; }
-
 body.transparent-mode .mic-button {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-  box-shadow: 0 4px 14px rgba(99,102,241,0.45) !important;
+    background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important;
 }
-body.transparent-mode .mic-button i { color: #FFFFFF !important; }
+body.transparent-mode .mic-button i { color: var(--ds-signal-ink) !important; }
+body.transparent-mode .mic-button.recording {
+    background: linear-gradient(135deg, var(--ds-danger), #E0503F) !important;
+}
+body.transparent-mode .gear-icon { background: rgba(255,255,255,0.14) !important; border-color: rgba(255,255,255,0.24) !important; }
+body.transparent-mode .toggle-switch input:checked + .slider { background: linear-gradient(90deg, var(--ds-signal-dim), var(--ds-signal)) !important; }
+body.transparent-mode .proactive-answer-now { background: rgba(30,33,42,0.92) !important; border-color: rgba(47,209,199,0.55) !important; }
+body.transparent-mode .proactive-answer-now:hover { background: rgba(15,32,30,0.95) !important; border-color: var(--ds-signal) !important; }
 
-/* ── Input fields ─────────────────────────────────────────────────────────── */
-body.transparent-mode #chatInput,
-body.transparent-mode textarea,
-body.transparent-mode input[type="text"],
-body.transparent-mode input[type="password"] {
-  background: rgba(0,0,0,0.70) !important;
-  border: 1px solid rgba(255,255,255,0.20) !important;
-  color: #FFFFFF !important;
-}
-body.transparent-mode #chatInput::placeholder { color: rgba(255,255,255,0.45) !important; }
-
-/* ── Quick action chips ───────────────────────────────────────────────────── */
-body.transparent-mode .quick-actions .action-tag {
-  background: rgba(0,0,0,0.78) !important;
-  border-color: rgba(255,255,255,0.20) !important;
-  color: #E5E7EB !important;
-}
-body.transparent-mode .quick-actions .action-tag:hover {
-  background: rgba(99,102,241,0.88) !important;
-  color: #FFFFFF !important;
+/* ── 17. LAUNCH ANIMATION — signal-ring beat, same timing hook ───────── */
+@keyframes launchZoom {
+    0%   { transform: scale(1);    filter: brightness(1); }
+    40%  { transform: scale(1.05); filter: brightness(1.07) saturate(1.05); }
+    100% { transform: scale(1);    filter: brightness(1); }
 }
 
-/* ── Code blocks ──────────────────────────────────────────────────────────── */
-body.transparent-mode .message-content pre {
-  background: rgba(255,255,255,0.07) !important;
-  border: 1px solid rgba(255,255,255,0.16) !important;
-}
-body.transparent-mode .message-content pre code { color: #E5E7EB !important; }
-body.transparent-mode .message-content code:not(pre code) {
-  background: rgba(255,255,255,0.08) !important;
-  color: #a5b4fc !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
+/* ── 18. FOCUS VISIBILITY (accessibility floor) ─────────────────────── */
+button:focus-visible, .action-tag:focus-visible, .suggestion-chip:focus-visible,
+.compact-select:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--ds-signal) !important;
+    outline-offset: 2px !important;
 }
 
-/* ── Modal in hide mode: keep the dark glass, just drop backdrop-filter ───── */
-body.transparent-mode .modal-content {
-  background: rgba(10,10,15,0.96) !important;
-  border: 1px solid rgba(255,255,255,0.18) !important;
-  color: #FFFFFF !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-body.transparent-mode .modal-content * { color: #E5E7EB !important; }
-body.transparent-mode .modal-header h3 { color: #FFFFFF !important; }
-body.transparent-mode .profile-tabs { background: rgba(255,255,255,0.07) !important; }
-body.transparent-mode .profile-tab { color: rgba(255,255,255,0.60) !important; }
-body.transparent-mode .profile-tab.active {
-  background: rgba(99,102,241,0.88) !important;
-  color: #FFFFFF !important;
-}
-body.transparent-mode .form-label { color: #E5E7EB !important; }
-body.transparent-mode .modal-content textarea {
-  background: rgba(255,255,255,0.07) !important;
-  border-color: rgba(255,255,255,0.18) !important;
-  color: #FFFFFF !important;
+/* ── 19. REDUCED MOTION ───────────────────────────────────────────────
+   Skill floor: respect prefers-reduced-motion. The signal-ring pulses
+   and shimmer/scan animations are purely decorative status indicators,
+   so they collapse to a static state rather than looping forever. */
+@media (prefers-reduced-motion: reduce) {
+    .hide-active-dot, .mic-button.recording {
+        animation: none !important;
+        box-shadow: 0 0 6px rgba(47,209,199,0.7) !important;
+    }
 }
 
+/* ── 20. MAIN APP SHELL — REMAINING ACCENTS ───────────────────────────
+   Closes out the main app shell pass. Header, chat bubbles, task-updater,
+   mic button, and chat input were already covered in sections 5–9; this
+   section catches the pieces that were still carrying the old
+   indigo/violet palette or unstyled hardcoded grays: the reset button,
+   the screen-share badge, the transparency indicator, the response
+   counter, and the hide/eye toggle. Same rule as everywhere else in this
+   file — recolor only, no HTML/JS touched. */
+
+/* Reset button — was flat white with a hardcoded #d1d5db hover and a
+   dark-gray icon, so it never picked up the graphite/signal palette.
+   Brought in line with the mic/gear button family. */
+.reset-button {
+    background: var(--ds-surface-2) !important;
+    border: 1px solid var(--ds-border) !important;
+}
+.reset-button:hover {
+    background: var(--ds-surface-3) !important;
+    border-color: rgba(47,209,199,0.35) !important;
+}
+.reset-button i { color: var(--ds-white-dim) !important; }
+.reset-button:hover i { color: var(--ds-white) !important; }
+
+/* Screen-sharing badge — was a flat solid rectangle; recut as a small
+   glass toast so it reads as the same UI language as the error-handler
+   toasts instead of a bare browser-alert block. */
+.screen-sharing-active {
+    background: rgba(24, 26, 33, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255,107,94,0.35) !important;
+    border-left: 3px solid var(--ds-danger) !important;
+    color: var(--ds-white) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+}
+
+/* Transparency indicator (small badge on the gear icon) — swap the old
+   indigo/violet gradient for the signal accent. */
+.transparency-indicator {
+    background: linear-gradient(135deg, var(--ds-signal-dim), var(--ds-signal)) !important;
+    box-shadow: 0 2px 6px rgba(47,209,199,0.4) !important;
+}
+.transparency-indicator i { color: var(--ds-signal-ink) !important; }
+
+/* Response / usage counter badge — was hardcoded indigo. */
+.response-counter {
+    background: rgba(24,26,33,0.92) !important;
+    border: 1px solid rgba(47,209,199,0.3) !important;
+    color: var(--ds-signal) !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35) !important;
+}
+
+/* Hide/eye toggle — the checked state already inherited the signal
+   gradient via the --primary remap, but the unchecked track was a flat
+   hardcoded white translucency with no border token, and the eye glyphs
+   had no explicit color. Aligned to the surface/border tokens. */
+.modern-switch .slider {
+    background: var(--ds-surface-3) !important;
+    border-color: var(--ds-border-strong) !important;
+}
+.modern-switch .knob {
+    background: var(--ds-white) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+}
+.modern-switch input[type="checkbox"]:checked + .slider .knob {
+    border-color: var(--ds-signal) !important;
+}
+.modern-switch.eye .slider .eye-off,
+.modern-switch.eye .slider .eye-on {
+    color: rgba(241,242,246,0.85) !important;
+}

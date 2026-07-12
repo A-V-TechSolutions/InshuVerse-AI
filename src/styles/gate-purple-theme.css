@@ -1,0 +1,544 @@
+/* ============================================================
+   GATE — BLACK & PURPLE OVERRIDE
+   ------------------------------------------------------------
+   Scope: ONLY the Sign-in screen (#signInScreen) and the
+   "Browser didn't open? / Copy Sign-in Link" popup that lives
+   inside #authLoadingOverlay. Nothing else in the app is touched.
+   Also gives the "Continue / Sign in with Google" buttons a full,
+   continuous animation treatment (moving gradient, pulsing glow,
+   light sweep) instead of a hover-only effect.
+
+   Load this file LAST (after light-theme.css) so it wins the
+   cascade against the light-theme !important rules for these
+   specific components.
+   ============================================================ */
+
+:root {
+    --gp-black:        #08070c;
+    --gp-black-soft:    #100c1a;
+    --gp-surface:       #16111f;
+    --gp-surface-2:     #1c1630;
+    --gp-border:        rgba(155, 138, 245, 0.22);
+    --gp-purple:        #7C6BF0;
+    --gp-purple-light:  #9B8AF5;
+    --gp-purple-deep:   #5B4BD4;
+    --gp-purple-glow:   rgba(124, 107, 240, 0.45);
+    --gp-text:          #F4F4F6;
+    --gp-text-dim:      rgba(244, 244, 246, 0.7);
+}
+
+/* ---------- 1. Sign-in screen shell ---------- */
+#signInScreen.gate-screen {
+    background: var(--gp-black) !important;
+    isolation: isolate;
+    position: relative;
+    overflow: hidden;
+}
+#signInScreen.gate-screen::before {
+    display: none; /* Disable the old background animation */
+}
+
+/* Keep real content above the animated backdrop */
+#signInScreen.gate-screen .geo-animation-container {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+/* Sign-in-screen top bar (in case it is ever shown) */
+#signInScreen .gate-navbar {
+    background: rgba(8, 7, 12, 0.85) !important;
+    border-bottom: 1px solid var(--gp-border) !important;
+}
+#signInScreen .gate-navbar-brand span { color: var(--gp-text) !important; }
+#signInScreen .gate-navbar-link { color: rgba(244, 244, 246, 0.55) !important; }
+#signInScreen .gate-navbar-link:hover {
+    background: rgba(124, 107, 240, 0.14) !important;
+    color: var(--gp-text) !important;
+}
+#signInScreen .gate-navbar-link.active {
+    background: rgba(124, 107, 240, 0.22) !important;
+    color: var(--gp-purple-light) !important;
+}
+
+/* The real header shown across every screen — purple-tint it only
+   while the sign-in screen is the active one. (Falls back to the
+   app's normal header colors on browsers without :has() support.) */
+body:has(#signInScreen:not(.hidden)) #unifiedHeader {
+    background: rgba(10, 8, 16, 0.92) !important;
+    border-bottom: 1px solid var(--gp-border) !important;
+}
+body:has(#signInScreen:not(.hidden)) #unifiedHeader .unified-app-name {
+    background: linear-gradient(135deg, var(--gp-purple-deep), var(--gp-purple-light)) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+}
+body:has(#signInScreen:not(.hidden)) #unifiedHeader .unified-logo {
+    box-shadow: 0 2px 10px rgba(124, 107, 240, 0.4) !important;
+}
+
+/* Badge ring + logo tile */
+#signInScreen .gate-badge::before,
+#signInScreen .gate-badge::after {
+    border-color: rgba(124, 107, 240, 0.45) !important;
+}
+#signInScreen .gate-badge img {
+    background: rgba(28, 22, 48, 0.85) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(124, 107, 240, 0.3) !important;
+}
+
+/* Copy + heading */
+#signInScreen .gate-eyebrow { color: var(--gp-purple-light) !important; }
+#signInScreen .gate-heading { color: var(--gp-text) !important; }
+#signInScreen .product-description { color: var(--gp-text-dim) !important; }
+
+/* ---------- 2. Fully-animated "Continue / Sign in with Google" buttons ---------- */
+#signInScreen .sign-in-btn,
+#welcomeScreen .welcome-google-btn {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(120deg, var(--gp-purple-deep), var(--gp-purple), var(--gp-purple-light), var(--gp-purple-deep)) !important;
+    background-size: 300% 300% !important;
+    color: var(--gp-text) !important;
+    border: 1px solid rgba(155, 138, 245, 0.4) !important;
+    box-shadow: 0 0 0 0 rgba(124, 107, 240, 0.55), 0 8px 24px rgba(124, 107, 240, 0.3) !important;
+    animation:
+        gpGradientMove 6s ease infinite,
+        gpGlowPulse 2.4s ease-out infinite;
+}
+#signInScreen .sign-in-btn:hover,
+#welcomeScreen .welcome-google-btn:hover {
+    transform: translateY(-2px) scale(1.015);
+    filter: brightness(1.08);
+}
+#signInScreen .sign-in-btn:active,
+#welcomeScreen .welcome-google-btn:active {
+    transform: translateY(0) scale(0.99);
+}
+
+/* moving light sweep, always running (not just on hover) */
+#signInScreen .sign-in-btn::after,
+#welcomeScreen .welcome-google-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 45%;
+    height: 100%;
+    z-index: 3;
+    background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-18deg);
+    animation: gpShimmerSweep 2.6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Visible label (icon + text) sits above the walk-scene animation */
+.gbtn-label {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+}
+
+/* subtle icon "breathe" so the whole control reads as alive — scoped to
+   the search icon only, not the walker/door glyphs below */
+.gbtn-label > .material-icons-round {
+    animation: gpIconPulse 2.4s ease-in-out infinite;
+}
+
+/* ---------- Walking man -> opens door -> "redirect" loop ---------- */
+.gbtn-walk-scene {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+    perspective: 220px;
+}
+.gbtn-walker-pos {
+    position: absolute;
+    top: 54%;
+    left: 4%;
+    transform: translateY(-50%);
+    animation: gpWalkAcross 4.5s ease-in-out infinite;
+}
+.gbtn-walker-glyph {
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.65);
+    text-shadow: 0 0 6px rgba(124, 107, 240, 0.6);
+    transform-origin: center bottom;
+    animation: gpWalkBob 0.42s ease-in-out infinite;
+}
+.gbtn-door {
+    position: absolute;
+    top: 54%;
+    right: 5%;
+    transform: translateY(-50%);
+    transform-origin: left center;
+    font-size: 18px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.55);
+    animation: gpDoorSwing 4.5s ease-in-out infinite;
+}
+
+@keyframes gpWalkAcross {
+    0%   { left: 4%;  opacity: 0; }
+    4%   { opacity: 1; }
+    50%  { left: 70%; opacity: 1; }
+    58%  { left: 80%; opacity: 1; }
+    65%  { left: 87%; opacity: 0; }
+    100% { left: 4%;  opacity: 0; }
+}
+@keyframes gpWalkBob {
+    0%, 100% { transform: translateY(0) rotate(-8deg); }
+    50%      { transform: translateY(-2px) rotate(8deg); }
+}
+@keyframes gpDoorSwing {
+    0%, 50%  { transform: translateY(-50%) rotateY(0deg);   color: rgba(255, 255, 255, 0.55); }
+    60%      { transform: translateY(-50%) rotateY(-78deg); color: rgba(155, 138, 245, 0.95); }
+    80%      { transform: translateY(-50%) rotateY(-78deg); color: rgba(155, 138, 245, 0.95); }
+    92%, 100%{ transform: translateY(-50%) rotateY(0deg);   color: rgba(255, 255, 255, 0.55); }
+}
+
+@keyframes gpGradientMove {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+@keyframes gpGlowPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(124, 107, 240, 0.55), 0 8px 24px rgba(124, 107, 240, 0.3); }
+    60%  { box-shadow: 0 0 0 10px rgba(124, 107, 240, 0), 0 8px 24px rgba(124, 107, 240, 0.3); }
+    100% { box-shadow: 0 0 0 0 rgba(124, 107, 240, 0), 0 8px 24px rgba(124, 107, 240, 0.3); }
+}
+@keyframes gpShimmerSweep {
+    0%   { left: -60%; }
+    100% { left: 130%; }
+}
+@keyframes gpIconPulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.15); }
+}
+
+/* ---------- 3. Copy-URL popup (auth loading card + "Browser didn't open?" fallback) ---------- */
+.auth-loading-overlay {
+    background: rgba(8, 7, 12, 0.6) !important;
+}
+.auth-loading-card {
+    background: linear-gradient(180deg, rgba(22, 17, 31, 0.97), rgba(16, 12, 26, 0.97)) !important;
+    border: 1px solid var(--gp-border) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(124, 107, 240, 0.12) inset !important;
+}
+.auth-spinner {
+    border-color: rgba(124, 107, 240, 0.25) !important;
+    border-top-color: var(--gp-purple) !important;
+}
+.auth-title { color: var(--gp-text) !important; }
+.auth-message { color: var(--gp-text-dim) !important; }
+
+.auth-fallback {
+    border-top-color: var(--gp-border) !important;
+}
+.auth-fallback-icon {
+    background: linear-gradient(135deg, var(--gp-purple-deep), var(--gp-purple-light)) !important;
+    box-shadow: 0 4px 14px rgba(124, 107, 240, 0.45) !important;
+}
+.auth-fallback-title { color: var(--gp-text) !important; }
+.auth-fallback-subtitle { color: rgba(226, 232, 240, 0.72) !important; }
+.auth-fallback-step { color: rgba(226, 232, 240, 0.86) !important; }
+.auth-fallback-step-num {
+    background: rgba(124, 107, 240, 0.24) !important;
+    color: var(--gp-purple-light) !important;
+}
+.auth-fallback-strong { color: #d9d2ff !important; }
+
+.auth-fallback-url-input {
+    background: rgba(8, 7, 12, 0.75) !important;
+    border: 1px solid rgba(124, 107, 240, 0.35) !important;
+    color: #d9d2ff !important;
+}
+
+/* Copy Sign-in Link button — override the inline gradient with
+   !important (beats inline style) and add a matching animated glow. */
+#copyAuthPopupLinkBtn {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--gp-purple-deep) 0%, var(--gp-purple) 55%, var(--gp-purple-light) 100%) !important;
+    border: 1px solid rgba(155, 138, 245, 0.4) !important;
+    box-shadow: 0 6px 20px rgba(124, 107, 240, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06) inset !important;
+    animation: gpGlowPulse 2.4s ease-out infinite;
+}
+#copyAuthPopupLinkBtn:hover {
+    filter: brightness(1.1);
+}
+#copyAuthPopupLinkBtn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: skewX(-18deg);
+    animation: gpShimmerSweep 2.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #signInScreen .sign-in-btn,
+    #welcomeScreen .welcome-google-btn,
+    #signInScreen .sign-in-btn::after,
+    #welcomeScreen .welcome-google-btn::after,
+    .gbtn-label > .material-icons-round,
+    .gbtn-walker-pos,
+    .gbtn-walker-glyph,
+    .gbtn-door,
+    #copyAuthPopupLinkBtn,
+    #copyAuthPopupLinkBtn::after {
+        animation: none !important;
+    }
+    .gbtn-walk-scene { display: none !important; }
+}
+
+/* ---------- 4. User Profile Section ---------- */
+.user-profile-section {
+    background: linear-gradient(180deg, rgba(22, 17, 31, 0.95), rgba(16, 12, 26, 0.92));
+    border: 1px solid var(--gp-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(124, 107, 240, 0.1) inset;
+    backdrop-filter: blur(12px);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.profile-avatar {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--gp-purple-deep), var(--gp-purple-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(124, 107, 240, 0.4);
+}
+
+.profile-icon {
+    font-size: 28px;
+    color: white;
+}
+
+.avatar-glow {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 107, 240, 0.4) 0%, transparent 70%);
+    animation: avatarPulse 3s ease-in-out infinite;
+}
+
+@keyframes avatarPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    color: var(--gp-text) !important;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+}
+
+.profile-email {
+    color: var(--gp-text-dim) !important;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.profile-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, rgba(124, 107, 240, 0.2), rgba(155, 138, 245, 0.15));
+    border: 1px solid rgba(155, 138, 245, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    color: var(--gp-purple-light);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.profile-badge .material-icons-round {
+    font-size: 18px;
+}
+
+.credits-display {
+    margin-top: 1rem;
+}
+
+.credits-card {
+    background: rgba(8, 7, 12, 0.6);
+    border: 1px solid rgba(124, 107, 240, 0.25);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.credits-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--gp-purple-deep), var(--gp-purple));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(124, 107, 240, 0.3);
+}
+
+.credits-icon .material-icons-round {
+    color: white;
+    font-size: 20px;
+}
+
+.credits-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.credits-label {
+    color: var(--gp-text-dim);
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.credits-amount {
+    color: var(--gp-text);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.credits-progress {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 150px;
+}
+
+.progress-bar {
+    height: 8px;
+    background: rgba(124, 107, 240, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gp-purple-deep), var(--gp-purple-light));
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px rgba(124, 107, 240, 0.5);
+}
+
+.progress-text {
+    color: var(--gp-text-dim);
+    font-size: 0.7rem;
+    text-align: right;
+}
+
+/* ---------- 5. About Section ---------- */
+.about-section {
+    margin-top: 2rem;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.about-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.1));
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+}
+
+.about-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gp-purple), var(--gp-purple-light));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.about-card:hover::before {
+    opacity: 1;
+}
+
+.about-card:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.2));
+    border-color: rgba(168, 85, 247, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.25);
+}
+
+.about-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+    box-shadow: 0 3px 12px rgba(168, 85, 247, 0.4);
+}
+
+.about-icon .material-icons-round {
+    color: white;
+    font-size: 20px;
+}
+
+.about-card h3 {
+    color: #e0e7ff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.about-card p {
+    color: rgba(226, 232, 240, 0.8);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    margin: 0;
+}

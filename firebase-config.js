@@ -45,7 +45,9 @@ const API_URL =
 // "open browser console, set credits to 999" attack class entirely.
 
 
-
+// OAuth client ID and Secret for Desktop application
+const OAUTH_CLIENT_ID = process.env.OAUTH_CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
 // Keep a default for legacy callers, but main process should pass a dynamic 127.0.0.1:<port>
 const DEFAULT_REDIRECT_URI = 'http://127.0.0.1';
 
@@ -115,18 +117,28 @@ async function handleUserLogin(idToken) {
 // getOrInitUserPlan Cloud Function, which is the only writer permitted by
 // the rules. This means a tampered client cannot create itself a doc with
 // planId='lifetime' — the server overrides any client-supplied values.
-async function checkUserPlan(userId) {
+async function checkUserPlan(userId, userEmail = null, userName = null) {
   try {
 
+    console.log("API_URL:", API_URL);
+
+    // Build query parameters for email and name
+    const params = new URLSearchParams();
+    if (userEmail) params.append('email', userEmail);
+    if (userName) params.append('name', userName);
+    const queryString = params.toString();
+
     const response = await axios.get(
-      `${API_URL}/api/user/plan/${userId}`
+      `${API_URL}/api/user/plan/${userId}${queryString ? `?${queryString}` : ''}`
     );
 
-    // 👇 ADD THESE TWO LINES HERE
-    console.log("========== BACKEND RESPONSE ==========");
-    console.log(response.data);
+    console.log("Backend Response:", response.data);
 
     const data = response.data;
+
+    // Backend response logging
+    console.log("========== BACKEND RESPONSE ==========");
+    console.log(response.data);
 
     return {
       hasAccess: data.credits > 0,
@@ -134,6 +146,7 @@ async function checkUserPlan(userId) {
       isLifetimePlan: false,
       isUnlimitedPlan: false,
       credits: data.credits,
+      role: data.role || 'user',
       subscription: {
         planId: data.plan,
         credits: data.credits
@@ -187,7 +200,7 @@ async function deductUserCredits(userId, creditsToDeduct) {
   try {
 
     const response = await axios.post(
-  `${API_URL}/api/credits/debit`,
+      `${API_URL}/api/credits/debit`,
       {
         uid: userId,
         amount: creditsToDeduct

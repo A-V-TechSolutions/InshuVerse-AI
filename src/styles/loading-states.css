@@ -1,23 +1,25 @@
-/* Enhanced Loading States CSS for Angel AI Assistant */
-/* Modern, professional loading indicators with animations */
+/* Loading States CSS for Angel AI Assistant — Slate & Signal pass */
+/* Same class names/structure as before (JS builds these nodes) — only
+   visual treatment changes, so LoadingStates.js needs no edits. */
 
 .loading-container {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(24, 26, 33, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 10000;
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.9);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 320px;
   max-width: 400px;
+  color: #F4F4F6;
 }
 
 .loading-container.visible {
@@ -31,13 +33,13 @@
 }
 
 .loading-container.success {
-  background: rgba(34, 197, 94, 0.1);
-  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(124, 107, 240, 0.12);
+  border-color: rgba(124, 107, 240, 0.32);
 }
 
 .loading-container.error {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(124, 107, 240, 0.12);
+  border-color: rgba(124, 107, 240, 0.32);
 }
 
 .loading-content {
@@ -56,7 +58,7 @@
   justify-content: center;
 }
 
-/* Audio Wave Animation */
+/* Audio Wave Animation — bars now share the signal accent */
 .audio-wave {
   display: flex;
   gap: 4px;
@@ -66,7 +68,7 @@
 
 .wave-bar {
   width: 4px;
-  background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(45deg, #5B4BD4, #7C6BF0);
   border-radius: 2px;
   animation: wave 1.5s ease-in-out infinite;
 }
@@ -91,7 +93,7 @@
 .dot {
   width: 12px;
   height: 12px;
-  background: linear-gradient(45deg, #10b981, #3b82f6);
+  background: linear-gradient(45deg, #5B4BD4, #7C6BF0);
   border-radius: 50%;
   animation: bounce 1.4s ease-in-out infinite both;
 }
@@ -128,7 +130,7 @@
 }
 
 .grid-cell {
-  background: rgba(139, 92, 246, 0.3);
+  background: rgba(124, 107, 240, 0.3);
   border-radius: 4px;
   animation: scan-pulse 2s ease-in-out infinite;
 }
@@ -144,17 +146,17 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+  background: linear-gradient(90deg, transparent, #7C6BF0, transparent);
   animation: scan-line 2s linear infinite;
 }
 
 @keyframes scan-pulse {
-  0%, 100% { 
-    background: rgba(139, 92, 246, 0.3);
+  0%, 100% {
+    background: rgba(124, 107, 240, 0.3);
     transform: scale(1);
   }
-  50% { 
-    background: rgba(139, 92, 246, 0.8);
+  50% {
+    background: rgba(124, 107, 240, 0.8);
     transform: scale(1.05);
   }
 }
@@ -164,34 +166,37 @@
   100% { transform: translateY(48px); }
 }
 
-/* Generic Spinner */
+/* Generic Spinner — reworked as the "signal ring": a pulsing halo instead
+   of a spinning arc, so idle/loading/listening all read as one motif
+   (see .hide-active-dot and .mic-button.recording in design-system.css). */
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(59, 130, 246, 0.1);
-  border-left: 4px solid #3b82f6;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  background: var(--ds-signal, #7C6BF0);
+  animation: spinnerRing 1.6s ease-out infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes spinnerRing {
+  0%   { box-shadow: 0 0 0 0 rgba(124,107,240,0.55), 0 0 0 0 rgba(124,107,240,0.35); opacity: 1; }
+  60%  { box-shadow: 0 0 0 10px rgba(124,107,240,0), 0 0 0 20px rgba(124,107,240,0); opacity: 0.85; }
+  100% { box-shadow: 0 0 0 10px rgba(124,107,240,0), 0 0 0 20px rgba(124,107,240,0); opacity: 1; }
 }
 
 /* Loading Text */
 .loading-text h3 {
   margin: 0;
+  font-family: "Space Grotesk", "Inter", sans-serif;
   font-size: 18px;
   font-weight: 600;
-  color: #1f2937;
-  letter-spacing: -0.025em;
+  color: #F4F4F6;
+  letter-spacing: -0.02em;
 }
 
 .loading-subtitle {
   margin: 4px 0 0 0;
   font-size: 14px;
-  color: #6b7280;
+  color: #9CA0AC;
   font-weight: 400;
 }
 
@@ -203,9 +208,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 12px;
-  color: #374151;
-  background: rgba(59, 130, 246, 0.1);
+  color: #F4F4F6;
+  background: rgba(124, 107, 240, 0.14);
   padding: 4px 8px;
   border-radius: 12px;
   font-weight: 500;
@@ -222,14 +228,14 @@
 .progress-bar {
   width: 100%;
   height: 6px;
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(124, 107, 240, 0.12);
   border-radius: 3px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(90deg, #5B4BD4, #7C6BF0);
   border-radius: 3px;
   width: 0%;
   transition: width 0.3s ease;
@@ -243,7 +249,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
   animation: shimmer 1.5s infinite;
 }
 
@@ -253,35 +259,11 @@
 }
 
 .progress-text {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 12px;
-  color: #6b7280;
+  color: #9CA0AC;
   text-align: center;
   font-weight: 500;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .loading-container {
-    background: rgba(17, 24, 39, 0.95);
-    border-color: rgba(75, 85, 99, 0.3);
-  }
-  
-  .loading-text h3 {
-    color: #f9fafb;
-  }
-  
-  .loading-subtitle {
-    color: #9ca3af;
-  }
-  
-  .provider-indicator {
-    color: #d1d5db;
-    background: rgba(59, 130, 246, 0.2);
-  }
-  
-  .progress-text {
-    color: #9ca3af;
-  }
 }
 
 /* Responsive design */
@@ -290,17 +272,23 @@
     min-width: 280px;
     padding: 24px;
   }
-  
+
   .loading-icon {
     width: 48px;
     height: 48px;
   }
-  
+
   .loading-text h3 {
     font-size: 16px;
   }
-  
+
   .loading-subtitle {
     font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner, .wave-bar, .dot, .grid-cell, .scan-line, .progress-fill::after {
+    animation: none !important;
   }
 }

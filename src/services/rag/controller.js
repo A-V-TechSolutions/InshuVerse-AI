@@ -19,6 +19,8 @@
 
 const path = require('path');
 const crypto = require('crypto');
+const https = require('https');
+const http = require('http');
 
 const { chunkText } = require('./chunker');
 const { extractDocument, isSupported, getExt } = require('./extractor');
@@ -202,7 +204,150 @@ async function retrieve(query, opts) {
 // (no model, no native bindings). Resolves true so callers can `await` it.
 async function warmup() { return true; }
 
+// Fetch content from a URL and add it to the knowledge base
+async function addLink(url, opts) {
+  const o = opts || {};
+  const onProgress = typeof o.onProgress === 'function' ? o.onProgress : () => {};
+
+  try {
+    onProgress({ phase: 'extract', message: `Fetching content from ${url}` });
+
+    // Fetch content from URL
+    const content = await fetchUrlContent(url);
+    if (!content || content.trim().length === 0) {
+      throw new Error('No content could be fetched from the URL');
+    }
+
+    // Generate a name from the URL
+    const urlObj = new URL(url);
+    const name = urlObj.hostname + urlObj.pathname.replace(/\/$/, '').split('/').pop() || urlObj.hostname;
+    const ext = 'txt';
+
+    // Check document limit
+    const existing = await store.listDocuments();
+    if (existing.length >= MAX_DOCUMENTS) {
+      throw new Error(`Knowledge base limit reached (${MAX_DOCUMENTS} files). Remove some before adding more.`);
+    }
+
+    // Chunk the content
+    onProgress({ phase: 'index', message: 'Processing content' });
+    const chunks = chunkText(content, { targetTokens: 500, overlapTokens: 50 });
+    if (chunks.length === 0) {
+      throw new Error('URL content produced no chunks (text too short).');
+    }
+
+    // Check chunk limit
+    const runningChunkTotal = await store.getChunkCount();
+    if (runningChunkTotal + chunks.length > MAX_TOTAL_CHUNKS) {
+      throw new Error(`Adding this URL would exceed the ${MAX_TOTAL_CHUNKS}-chunk corpus limit.`);
+    }
+
+    const textHash = _hash(content);
+    const id = _docId(name, textHash);
+
+    // Skip if identical content already exists
+    const existingDoc = await store.getDocument(id);
+    if (existingDoc) {
+      return { added: [{ id, name, chunkCount: existingDoc.chunkCount, skipped: true }], errors: [] };
+    }
+
+    // Prepare document and chunks for storage
+    const rows = chunks.map((text, idx) => ({
+      id: `${id}-${idx}`,
+      docId: id,
+      chunkIndex: idx,
+      text,
+    }));
+
+    const doc = {
+      id,
+      name: `${name} (from ${url})`,
+      ext,
+      bytes: content.length,
+      pages: 1,
+      chunkCount: rows.length,
+      createdAt: Date.now(),
+      textHash,
+      sourceUrl: url,
+    };
+
+    onProgress({ phase: 'persist', message: 'Saving to knowledge base' });
+    await store.addDocument(doc, rows);
+
+    _invalidateCache();
+    onProgress({ phase: 'done', message: 'Successfully added URL content' });
+
+    return { added: [{ id, name: doc.name, chunkCount: rows.length }], errors: [] };
+  } catch (e) {
+    console.error('[RAG] addLink failed:', e);
+    return { added: [], errors: [{ name: url, error: e.message || String(e) }] };
+  }
+}
+
+// Helper function to fetch content from a URL
+function fetchUrlContent(url) {
+  return new Promise((resolve, reject) => {
+    const urlObj = new URL(url);
+    const protocol = urlObj.protocol === 'https:' ? https : http;
+
+    const options = {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      },
+      timeout: 15000 // 15 second timeout
+    };
+
+    const req = protocol.request(url, options, (res) => {
+      let data = '';
+
+      // Handle redirects
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        return fetchUrlContent(res.headers.location).then(resolve).catch(reject);
+      }
+
+      if (res.statusCode !== 200) {
+        return reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
+      }
+
+      // Check content type
+      const contentType = res.headers['content-type'] || '';
+      if (!contentType.includes('text/') && !contentType.includes('html') && !contentType.includes('json')) {
+        return reject(new Error('Unsupported content type. Only text-based content is supported.'));
+      }
+
+      res.setEncoding('utf8');
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      res.on('end', () => {
+        // Basic HTML tag removal if content is HTML
+        if (contentType.includes('html')) {
+          data = data
+            .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+            .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+            .replace(/<[^>]+>/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+        }
+        resolve(data);
+      });
+    });
+
+    req.on('error', (err) => {
+      reject(new Error(`Failed to fetch URL: ${err.message}`));
+    });
+
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error('Request timeout'));
+    });
+
+    req.end();
+  });
+}
+
 module.exports = {
-  addFiles, listFiles, removeFile, clearAll, stats, retrieve, warmup,
+  addFiles, addLink, listFiles, removeFile, clearAll, stats, retrieve, warmup,
   MAX_DOCUMENTS, MAX_TOTAL_CHUNKS,
 };
