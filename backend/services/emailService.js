@@ -1,18 +1,7 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 require('dotenv').config();
 
-// SMTP Configuration
-const smtpConfig = {
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT) || 587,
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-};
-
-const transporter = nodemailer.createTransport(smtpConfig);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Welcome email template
 function getWelcomeEmailTemplate(userName) {
@@ -87,15 +76,14 @@ function getWelcomeEmailTemplate(userName) {
 // Send welcome email
 async function sendWelcomeEmail(userEmail, userName) {
   try {
-    const mailOptions = {
-      from: `"InshuVerse AI" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    const data = await resend.emails.send({
+      from: 'InshuVerse AI <noreply@inshuverse.ai>',
       to: userEmail,
       subject: '🎉 Welcome to InshuVerse AI',
       html: getWelcomeEmailTemplate(userName),
-    };
-    const info = await transporter.sendMail(mailOptions);
-    console.log('[EMAIL] Welcome email sent:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    });
+    console.log('[EMAIL] Welcome email sent:', data);
+    return { success: true, data };
   } catch (error) {
     console.error('[EMAIL] Failed to send welcome email:', error);
     return { success: false, error: error.message };
@@ -163,15 +151,14 @@ function getLoginEmailTemplate(userName, loginTime, ipAddress, device) {
 // Send login notification email
 async function sendLoginEmail(userEmail, userName, loginTime, ipAddress, device) {
   try {
-    const mailOptions = {
-      from: `"InshuVerse AI" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    const data = await resend.emails.send({
+      from: 'InshuVerse AI <noreply@inshuverse.ai>',
       to: userEmail,
       subject: 'New Login Detected',
       html: getLoginEmailTemplate(userName, loginTime, ipAddress, device),
-    };
-    const info = await transporter.sendMail(mailOptions);
-    console.log('[EMAIL] Login email sent:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    });
+    console.log('[EMAIL] Login email sent:', data);
+    return { success: true, data };
   } catch (error) {
     console.error('[EMAIL] Failed to send login email:', error);
     return { success: false, error: error.message };
