@@ -93,6 +93,21 @@ const _LIFETIME_PLAN_IDS = new Set([
   'angel-lifetime-monthly', 'angel-lifetime-yearly'
 ]);
 
+// Function to handle user login with Firebase token verification
+async function handleUserLogin(idToken) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/api/auth/login`,
+      { idToken }
+    );
+    console.log('[AUTH] Login successful:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('[AUTH] Login error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 // Function to check user's plan and credits (credit-based system for all plans except lifetime)
 //
 // Read path: a single getDoc — fast, cheap, allowed by firestore.rules.
@@ -197,6 +212,7 @@ async function deductUserCredits(userId, creditsToDeduct) {
 module.exports = {
   getGoogleAuthDetails,
   checkUserPlan,
+  handleUserLogin,
   updateUserCredits,
   deductUserCredits,
   getPlanCredits,

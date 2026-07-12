@@ -33,7 +33,7 @@ const {
 const {
   answerFromImageWithModelSelectionStream: answerFromImageWithModelSelectionStreamSvc
 } = require('./src/services/screenshot')
-const { auth, checkUserPlan, updateUserCredits, deductUserCredits, getPlanCredits, getGoogleAuthDetails, signInWithCredential, GoogleAuthProvider } = require('./firebase-config')
+const { auth, checkUserPlan, handleUserLogin, updateUserCredits, deductUserCredits, getPlanCredits, getGoogleAuthDetails, signInWithCredential, GoogleAuthProvider } = require('./firebase-config')
 const {
   readUserProfile: readUserProfileSvc,
   writeUserProfile: writeUserProfileSvc,
@@ -2287,6 +2287,10 @@ ipcMain.handle('sign-in', async () => {
               const result = await signInWithCredential(auth, credential);
               currentUser = result.user;
               console.log('Firebase sign-in successful:', currentUser.email);
+
+              // Get ID token and call backend login endpoint
+              const idToken = await currentUser.getIdToken();
+              await handleUserLogin(idToken);
 
               // ALWAYS fetch fresh plan and credits data from the server/database
               console.log('[SIGN-IN] Fetching fresh plan and credits data from server for user:', currentUser.uid);
