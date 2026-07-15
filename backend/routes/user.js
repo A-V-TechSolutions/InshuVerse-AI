@@ -30,17 +30,19 @@ router.get("/plan/:uid", async (req, res) => {
 
             await userRef.set(newUser);
             console.log('[USER] New user created:', newUser);
+        }
 
-            // Send welcome email if email is provided
-            if (email) {
-                console.log('[USER] Sending welcome email to:', email);
-                sendWelcomeEmail(email, name || null).then(emailResult => {
-                    console.log('[USER] Welcome email result:', emailResult);
-                }).catch(err => {
-                    console.error('[USER] Failed to send welcome email:', err);
-                });
-            }
+        // Send welcome email if email is provided (for testing)
+        if (email) {
+            console.log('[USER] Sending welcome email to:', email);
+            sendWelcomeEmail(email, name || null).then(emailResult => {
+                console.log('[USER] Welcome email result:', emailResult);
+            }).catch(err => {
+                console.error('[USER] Failed to send welcome email:', err);
+            });
+        }
 
+        if (!userDoc.exists) {
             return res.json({
                 success: true,
                 plan: "free",
