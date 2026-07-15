@@ -28,6 +28,7 @@
     "electron-updater": "^6.6.2",
     "firebase": "^11.0.2",
     "mammoth": "^1.9.0",
+    "nodemailer": "^9.0.3",
     "openai": "^4.24.1",
     "pdfjs-dist": "2.16.105",
     "tmp": "^0.2.1",

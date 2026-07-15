@@ -34,7 +34,7 @@ function getLowCreditEmailTemplate(userName, currentCredits) {
   
   <p>To continue using InshuVerse Application, please upgrade your plan.</p>
   
-  <p>Regards,<br>InshuVerse<br>support@inshuverse.2bd.net</p>
+  <p>Regards,<br>InshuVerse<br>help.inshuverse@gmail.com</p>
 </body>
 </html>
     `,
@@ -51,7 +51,7 @@ To continue using InshuVerse Application, please upgrade your plan.
 
 Regards,
 InshuVerse
-support@inshuverse.2bd.net
+help.inshuverse@gmail.com
     `
   };
 }

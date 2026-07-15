@@ -1,5 +1,5 @@
 const express = require("express");
-const { admin, db } = require("../firebase");
+const { auth, db } = require("../firebase");
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.post("/login", async (req, res) => {
     }
 
     // Verify the ID token using Firebase Admin SDK
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const decodedToken = await auth.verifyIdToken(idToken);
     const uid = decodedToken.uid;
     const email = decodedToken.email;
 

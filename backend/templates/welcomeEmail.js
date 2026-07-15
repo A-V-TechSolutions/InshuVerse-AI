@@ -36,7 +36,7 @@ function getWelcomeEmailTemplate(userName, userEmail) {
   
   <p><strong>Credits:</strong> 7</p>
   
-  <p>Regards,<br>InshuVerse<br>support@inshuverse.2bd.net</p>
+  <p>Regards,<br>InshuVerse<br>help.inshuverse@gmail.com</p>
 </body>
 </html>
     `,
@@ -54,7 +54,7 @@ Credits: 7
 
 Regards,
 InshuVerse
-support@inshuverse.2bd.net
+help.inshuverse@gmail.com
     `
   };
 }

@@ -1,11 +1,20 @@
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 const { getWelcomeEmailTemplate } = require('../templates/welcomeEmail');
 const { getLowCreditEmailTemplate } = require('../templates/lowCreditEmail');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Create transporter for Brevo SMTP
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
+  port: process.env.SMTP_PORT || 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'InshuVerse AI <support@inshuverse.2bd.net>';
+const FROM_EMAIL = process.env.SMTP_FROM || 'InshuVerse <help.inshuverse@gmail.com>';
 
 // Send welcome email
 async function sendWelcomeEmail(userEmail, userName) {
@@ -13,7 +22,7 @@ async function sendWelcomeEmail(userEmail, userName) {
 
   try {
     const template = getWelcomeEmailTemplate(userName, userEmail);
-    const result = await resend.emails.send({
+    const result = await transporter.sendMail({
       from: FROM_EMAIL,
       to: userEmail,
       subject: 'InshuVerse account confirmation',
@@ -22,7 +31,7 @@ async function sendWelcomeEmail(userEmail, userName) {
     });
 
     console.log('[EMAIL] Welcome email sent successfully:', result);
-    return { success: true, messageId: result.data?.id, response: result };
+    return { success: true, messageId: result.messageId, response: result };
   } catch (error) {
     console.error('[EMAIL] Failed to send welcome email:', error);
     return { success: false, error: error.message, details: error };
@@ -36,7 +45,7 @@ async function sendCreditLowEmail(userEmail, userName, currentCredits) {
 
   try {
     const template = getLowCreditEmailTemplate(userName, currentCredits);
-    const result = await resend.emails.send({
+    const result = await transporter.sendMail({
       from: FROM_EMAIL,
       to: userEmail,
       subject: 'InshuVerse credits notification',
@@ -45,7 +54,7 @@ async function sendCreditLowEmail(userEmail, userName, currentCredits) {
     });
 
     console.log('[EMAIL] Credit low email sent:', result);
-    return { success: true, messageId: result.data?.id };
+    return { success: true, messageId: result.messageId };
   } catch (error) {
     console.error('[EMAIL] Failed to send credit low email:', error);
     return { success: false, error: error.message };
