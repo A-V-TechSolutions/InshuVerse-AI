@@ -16,7 +16,7 @@ async function sendWelcomeEmail(userEmail, userName) {
     const result = await resend.emails.send({
       from: FROM_EMAIL,
       to: userEmail,
-      subject: 'Welcome to InshuVerse AI - Your AI Interview Assistant',
+      subject: 'InshuVerse account confirmation',
       html: template.html,
       text: template.text,
     });
@@ -39,7 +39,7 @@ async function sendCreditLowEmail(userEmail, userName, currentCredits) {
     const result = await resend.emails.send({
       from: FROM_EMAIL,
       to: userEmail,
-      subject: 'Low Credits Warning - InshuVerse AI',
+      subject: 'InshuVerse credits notification',
       html: template.html,
       text: template.text,
     });

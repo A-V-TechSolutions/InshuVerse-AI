@@ -11,7 +11,7 @@ function getLowCreditEmailTemplate(userName, currentCredits) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Low Credits - InshuVerse AI</title>
+  <title>Low Credits - InshuVerse</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -24,7 +24,7 @@ function getLowCreditEmailTemplate(userName, currentCredits) {
   </style>
 </head>
 <body>
-  <h2>Low Credits Warning</h2>
+  <h2>Low Credits Notification</h2>
   
   <p>Hello ${userName || 'User'},</p>
   
@@ -32,14 +32,14 @@ function getLowCreditEmailTemplate(userName, currentCredits) {
   
   <p><strong>Current Credits:</strong> ${currentCredits}</p>
   
-  <p>To continue using InshuVerse AI, please upgrade your plan.</p>
+  <p>To continue using InshuVerse Application, please upgrade your plan.</p>
   
-  <p>Regards,<br>InshuVerse AI<br>support@inshuverse.2bd.net</p>
+  <p>Regards,<br>InshuVerse<br>support@inshuverse.2bd.net</p>
 </body>
 </html>
     `,
     text: `
-Low Credits Warning - InshuVerse AI
+Low Credits Notification - InshuVerse
 
 Hello ${userName || 'User'},
 
@@ -47,10 +47,10 @@ Your credits are running low.
 
 Current Credits: ${currentCredits}
 
-To continue using InshuVerse AI, please upgrade your plan.
+To continue using InshuVerse Application, please upgrade your plan.
 
 Regards,
-InshuVerse AI
+InshuVerse
 support@inshuverse.2bd.net
     `
   };

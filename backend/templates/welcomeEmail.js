@@ -11,7 +11,7 @@ function getWelcomeEmailTemplate(userName, userEmail) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to InshuVerse AI</title>
+  <title>Welcome to InshuVerse </title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -24,36 +24,36 @@ function getWelcomeEmailTemplate(userName, userEmail) {
   </style>
 </head>
 <body>
-  <h2>Welcome to InshuVerse AI</h2>
+  <h2>Welcome to InshuVerse</h2>
   
   <p>Hello ${userName || 'User'},</p>
   
-  <p>Thank you for creating your InshuVerse AI account.</p>
+  <p>Thank you for creating your InshuVerse account.</p>
   
   <p>Your account is now active.</p>
   
   <p><strong>Email:</strong> ${userEmail}</p>
   
-  <p><strong>Free Credits:</strong> 7</p>
+  <p><strong>Credits:</strong> 7</p>
   
-  <p>Regards,<br>InshuVerse AI<br>support@inshuverse.2bd.net</p>
+  <p>Regards,<br>InshuVerse<br>support@inshuverse.2bd.net</p>
 </body>
 </html>
     `,
     text: `
-Welcome to InshuVerse AI
+Welcome to InshuVerse
 
 Hello ${userName || 'User'},
 
-Thank you for creating your InshuVerse AI account.
+Thank you for creating your InshuVerse account.
 
 Your account is now active.
 
 Email: ${userEmail}
-Free Credits: 7
+Credits: 7
 
 Regards,
-InshuVerse AI
+InshuVerse
 support@inshuverse.2bd.net
     `
   };
