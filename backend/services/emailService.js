@@ -227,7 +227,7 @@ async function sendCreditLowEmail(userEmail, userName, currentCredits) {
 
   try {
     const result = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'InshuVerse AI <onboarding@resend.dev>',
+      from: process.env.RESEND_FROM_EMAIL || 'Inshuverse <support@inshuverse.2bd.net>',
       to: userEmail,
       subject: 'Low Credits Warning - InshuVerse AI',
       html: getCreditLowEmailTemplate(userName, currentCredits),
