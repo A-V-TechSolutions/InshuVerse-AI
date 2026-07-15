@@ -6,11 +6,14 @@ const { getLowCreditEmailTemplate } = require('../templates/lowCreditEmail');
 // Create transporter for Brevo SMTP
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
-  port: process.env.SMTP_PORT || 587,
-  secure: false, // true for 465, false for other ports
+  port: process.env.SMTP_PORT || 465,
+  secure: true, // true for 465 (SSL), false for other ports
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false // Allow self-signed certificates
   },
 });
 
