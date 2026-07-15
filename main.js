@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, systemPreferences, shell, desktopCapturer, 
 const path = require('path')
 const fs = require('fs')
 const os = require('os')
+require('dotenv').config()
 
 const OpenAI = require('openai')
 const { GoogleGenerativeAI } = require('@google/generative-ai')
