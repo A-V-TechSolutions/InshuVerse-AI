@@ -1,7 +1,7 @@
 {
   "name": "inshuverse-ai",
   "productName": "InshuVerse AI",
-  "version": "6.0.7",
+  "version": "6.0.8",
   "description": "AI Desktop Assistant",
   "main": "main.js",
   "author": {
