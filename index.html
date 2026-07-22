@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://api.openai.com https://lazyjobseeker.com https://*.googleapis.com https://*.firebaseio.com https://*.firebase.com https://*.google.com">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://api.openai.com https://inshuverse-ai.web.app https://*.googleapis.com https://*.firebaseio.com https://*.firebase.com https://*.google.com">
     <title>Inshuverse AI</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -7924,7 +7924,7 @@
                 <!-- Footer -->
                 <div class="welcome-footer">
                     <span>A product from </span>
-                    <a href="https://lazyjobseeker.com" target="_blank">InshuVerse AI</a>
+                    <a href="https://inshuverse-ai.web.app" target="_blank">InshuVerse AI</a>
                 </div>
             </div>
         </div>
@@ -11446,13 +11446,13 @@
 
                 try {
                     console.log('[UPGRADE] Opening external link...');
-                    shell.openExternal('https://lazyjobseeker.com/pricing');
+                    shell.openExternal('https://https://inshuverse-ai.web.app');
                     console.log('[UPGRADE] Link opened successfully');
                 } catch (err) {
                     console.error('[UPGRADE] Failed to open link:', err);
                     // Fallback: try using IPC
                     try {
-                        ipcRenderer.send('open-external-url', 'https://lazyjobseeker.com/pricing');
+                        ipcRenderer.send('open-external-url', 'https://inshuverse-ai.web.app');
                     } catch (ipcErr) {
                         console.error('[UPGRADE] IPC fallback failed:', ipcErr);
                     }
